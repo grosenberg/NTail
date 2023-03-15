@@ -1,0 +1,1699 @@
+# Logfile created on Fri Feb 09 08:35:38 -0600 2007 by logger.rb/1.5.2.9
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Table 'beast_development.schema_info' doesn't exist: SELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mDROP DATABASE IF EXISTS `beast_test`[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE DATABASE `beast_test`[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE TABLE schema_info (version int(11))[0m
+  [4;35;1mSQL (0.000000)[0m   [0mINSERT INTO schema_info (version) VALUES(0)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S01Table 'schema_info' already exists: CREATE TABLE schema_info (version int(11))[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to CreateUsers (1)
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `login` varchar(255) DEFAULT NULL, `email` varchar(255) DEFAULT NULL, `password` varchar(255) DEFAULT NULL, `created_at` datetime DEFAULT NULL, `last_login_at` datetime DEFAULT NULL, `admin` tinyint(1) DEFAULT NULL, `posts_count` int(11) DEFAULT 0) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 1[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to CreateForums (2)
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE TABLE forums (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 2[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to CreatePosts (3)
+  [4;36;1mSQL (0.016000)[0m   [0;1mCREATE TABLE posts (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `forum_id` int(11) DEFAULT NULL, `user_id` int(11) DEFAULT NULL, `post_id` int(11) DEFAULT NULL, `title` varchar(255) DEFAULT NULL, `body` text DEFAULT NULL, `created_at` datetime DEFAULT NULL, `updated_at` datetime DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 3[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to RenamePostToTopic (4)
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW COLUMNS FROM posts LIKE 'post_id'[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE posts CHANGE post_id topic_id int(11)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 4[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to AddForumDesc (5)
+  [4;35;1mSQL (0.016000)[0m   [0mALTER TABLE forums ADD `description` varchar(255)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 5[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to AddHits (6)
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE posts ADD `hits` int(11) DEFAULT 0[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 6[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to Sticky (7)
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE posts ADD `sticky` tinyint(1) DEFAULT 0[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 7[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to AddCounterCaches (8)
+  [4;36;1mSQL (0.015000)[0m   [0;1mALTER TABLE users ADD `topics_count` int(11) DEFAULT 0[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE forums ADD `topics_count` int(11) DEFAULT 0[0m
+  [4;36;1mSQL (0.016000)[0m   [0;1mALTER TABLE forums ADD `posts_count` int(11) DEFAULT 0[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE posts ADD `posts_count` int(11) DEFAULT 0[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 8[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to LastSeenAt (9)
+  [4;36;1mSQL (0.016000)[0m   [0;1mALTER TABLE users ADD `last_seen_at` datetime[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 9[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to AddSessions (10)
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE TABLE sessions (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `session_id` varchar(255) DEFAULT NULL, `data` text DEFAULT NULL, `updated_at` datetime DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE INDEX `index_sessions_on_session_id` ON sessions (`session_id`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 10[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to ResetCounterCache (11)
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums [0m
+  [4;36;1mPost Load (0.000000)[0m   [0;1mSELECT * FROM posts [0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 11[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to DisplayName (12)
+  [4;36;1mSQL (0.015000)[0m   [0;1mALTER TABLE users ADD `display_name` varchar(255)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 12[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to UserUpdatedAt (13)
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users ADD `updated_at` datetime[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 13[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to SetLastSeenAt (14)
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 14[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to AddTopicLastPostedAtDate (15)
+  [4;35;1mSQL (0.016000)[0m   [0mALTER TABLE posts ADD `replied_at` datetime[0m
+  [4;36;1mAddTopicLastPostedAtDate::Post Update (0.000000)[0m   [0;1mUPDATE posts SET replied_at = updated_at WHERE (topic_id = id) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 15[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to EmpowerSessions (16)
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE sessions ADD `user_id` int(11)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 16[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to UpdateUserPostCounts (17)
+  [4;36;1mSQL (0.016000)[0m   [0;1mALTER TABLE users DROP `topics_count`[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 17[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to AddContactFields (18)
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE users ADD `aim` varchar(255)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users ADD `yahoo` varchar(255)[0m
+  [4;36;1mSQL (0.015000)[0m   [0;1mALTER TABLE users ADD `google_talk` varchar(255)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users ADD `msn` varchar(255)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE users ADD `website` varchar(255)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 18[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to PositionForForums (19)
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE forums ADD `position` int(11)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 19[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to FixRepliedAt (20)
+  [4;36;1mSQL (0.000000)[0m   [0;1mupdate posts set replied_at=created_at where replied_at is null and id=topic_id[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 20[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to LogEveryoneOut (21)
+  [4;35;1mCGI::Session::ActiveRecordStore::Session Delete all (0.000000)[0m   [0mDELETE FROM sessions [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 21[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to CreateTopics (22)
+  [4;36;1mSQL (0.016000)[0m   [0;1mCREATE TABLE topics (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `forum_id` int(11) DEFAULT NULL, `user_id` int(11) DEFAULT NULL, `title` varchar(255) DEFAULT NULL, `created_at` datetime DEFAULT NULL, `updated_at` datetime DEFAULT NULL, `hits` int(11) DEFAULT 0, `sticky` tinyint(1) DEFAULT 0, `posts_count` int(11) DEFAULT 0, `replied_at` datetime DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;35;1mCreateTopics::Post Load (0.000000)[0m   [0mSELECT * FROM posts WHERE (id=topic_id) [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 22[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to CleanUpPostsTable (23)
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE posts DROP `title`[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE posts DROP `hits`[0m
+  [4;36;1mSQL (0.015000)[0m   [0;1mALTER TABLE posts DROP `sticky`[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE posts DROP `posts_count`[0m
+  [4;36;1mSQL (0.016000)[0m   [0;1mALTER TABLE posts DROP `replied_at`[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 23[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to LoginByKeyFields (24)
+  [4;35;1mSQL (0.031000)[0m   [0mALTER TABLE users ADD `login_key` varchar(255)[0m
+  [4;36;1mSQL (0.016000)[0m   [0;1mALTER TABLE users ADD `login_key_expires_at` datetime[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 24[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to RemoveUnnecessaryPostForumId (25)
+  [4;35;1mSQL (0.016000)[0m   [0mALTER TABLE posts DROP `forum_id`[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 25[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to ChangeStickyToInteger (26)
+  [4;36;1mChangeStickyToInteger::Topic Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM topics[0m
+  [4;35;1mChangeStickyToInteger::Topic Load (0.000000)[0m   [0mSELECT * FROM topics WHERE (topics.`sticky` = 1) [0m
+  [4;36;1mSQL (0.047000)[0m   [0;1mALTER TABLE topics CHANGE sticky sticky int(11) DEFAULT 0[0m
+  [4;35;1mChangeStickyToInteger::Topic Update (0.000000)[0m   [0mUPDATE topics SET sticky=1 WHERE (id in (NULL)) [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 26[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to ReAddPostsForumId (27)
+  [4;36;1mSQL (0.031000)[0m   [0;1mALTER TABLE posts ADD `forum_id` int(11)[0m
+  [4;35;1mReAddPostsForumId::Topic Load (0.000000)[0m   [0mSELECT id, forum_id FROM topics [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 27[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to FixForumPostsCount (28)
+  [4;36;1mFixForumPostsCount::Post Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM posts[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all, forum_id AS forum_id FROM posts GROUP BY forum_id [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 28[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to CreateModeratorships (29)
+  [4;36;1mSQL (0.016000)[0m   [0;1mCREATE TABLE moderatorships (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `forum_id` int(11) DEFAULT NULL, `user_id` int(11) DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 29[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to SetUserDisplayName (30)
+  [4;35;1mSetUserDisplayName::User Load (0.000000)[0m   [0mSELECT id, login, display_name FROM users [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 30[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to TopicLocked (31)
+  [4;36;1mSQL (0.015000)[0m   [0;1mALTER TABLE topics ADD `locked` tinyint(1) DEFAULT 0[0m
+  [4;35;1mTopic Update (0.000000)[0m   [0mUPDATE topics SET locked= 0 [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 31[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to AddActivatedBoolean (32)
+  [4;36;1mSQL (0.032000)[0m   [0;1mALTER TABLE users ADD `activated` tinyint(1) DEFAULT 0[0m
+  [4;35;1mAddActivatedBoolean::User Update (0.000000)[0m   [0mUPDATE users SET activated = 1 [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 32[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to AddPasswordHash (33)
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW COLUMNS FROM users LIKE 'password'[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users CHANGE password password_hash varchar(255)[0m
+  [4;36;1mAddPasswordHash::User Load (0.000000)[0m   [0;1mSELECT id, password_hash FROM users [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 33[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to CreateMonitorships (34)
+  [4;35;1mSQL (0.015000)[0m   [0mCREATE TABLE monitorships (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `topic_id` int(11) DEFAULT NULL, `user_id` int(11) DEFAULT NULL, `active` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 34[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to NeededIndexes (35)
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE INDEX `index_posts_on_user_id` ON posts (`user_id`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE INDEX `index_posts_on_topic_id` ON posts (`topic_id`)[0m
+  [4;36;1mSQL (0.016000)[0m   [0;1mCREATE INDEX `index_topics_on_forum_id` ON topics (`forum_id`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 35[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to TopicsCacheLastRepliedUser (36)
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE topics ADD `replied_by` int(11)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE topics ADD `last_post_id` int(11)[0m
+  [4;35;1mTopicsCacheLastRepliedUser::Topic Load (0.000000)[0m   [0mSELECT * FROM topics [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 36[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to DeleteEmptyTopics (37)
+  [4;36;1mDeleteEmptyTopics::Topic Load (0.000000)[0m   [0;1mSELECT * FROM topics [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 37[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to AddExceptionTable (38)
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Unknown table 'logged_exceptions': DROP TABLE logged_exceptions[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE TABLE logged_exceptions (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `exception_class` varchar(255) DEFAULT NULL, `controller_name` varchar(255) DEFAULT NULL, `action_name` varchar(255) DEFAULT NULL, `message` varchar(255) DEFAULT NULL, `backtrace` text DEFAULT NULL, `environment` text DEFAULT NULL, `request` text DEFAULT NULL, `created_at` datetime DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016000)[0m   [0mUPDATE schema_info SET version = 38[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to RemoveUnusedUserProfile (39)
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users DROP `aim`[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE users DROP `yahoo`[0m
+  [4;35;1mSQL (0.015000)[0m   [0mALTER TABLE users DROP `google_talk`[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE users DROP `msn`[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users ADD `bio` varchar(255)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 39[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to FixLastPosts (40)
+  [4;36;1mFixLastPosts::Topic Columns (0.016000)[0m   [0;1mSHOW FIELDS FROM topics[0m
+  [4;35;1mFixLastPosts::Post Columns (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mFixLastPosts::Topic Load Including Associations (0.000000)[0m   [0;1mSELECT topics.`id` AS t0_r0, topics.`forum_id` AS t0_r1, topics.`user_id` AS t0_r2, topics.`title` AS t0_r3, topics.`created_at` AS t0_r4, topics.`updated_at` AS t0_r5, topics.`hits` AS t0_r6, topics.`sticky` AS t0_r7, topics.`posts_count` AS t0_r8, topics.`replied_at` AS t0_r9, topics.`locked` AS t0_r10, topics.`replied_by` AS t0_r11, topics.`last_post_id` AS t0_r12, posts.`id` AS t1_r0, posts.`user_id` AS t1_r1, posts.`topic_id` AS t1_r2, posts.`body` AS t1_r3, posts.`created_at` AS t1_r4, posts.`updated_at` AS t1_r5, posts.`forum_id` AS t1_r6 FROM topics LEFT OUTER JOIN posts ON posts.topic_id = topics.id [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 40[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to AddPostsBodyHtml (41)
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE posts ADD `body_html` text[0m
+  [4;36;1mSQL (0.015000)[0m   [0;1mALTER TABLE users ADD `bio_html` text[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE forums ADD `description_html` text[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mBEGIN[0m
+  [4;35;1mPost Load (0.000000)[0m   [0mSELECT * FROM posts [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000000)[0m   [0mBEGIN[0m
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums [0m
+  [4;35;1mSQL (0.000000)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mBEGIN[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 41[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to UpdateWhiteList (42)
+  [4;35;1mSQL (0.000000)[0m   [0mBEGIN[0m
+  [4;36;1mPost Load (0.000000)[0m   [0;1mSELECT * FROM posts [0m
+  [4;35;1mSQL (0.000000)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mBEGIN[0m
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000000)[0m   [0mBEGIN[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users [0m
+  [4;35;1mSQL (0.000000)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 42[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to IndexHappy (43)
+  [4;36;1mSQL (0.000000)[0m   [0;1mDROP INDEX `index_posts_on_topic_id` ON posts[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE INDEX `index_posts_on_forum_id` ON posts (`forum_id`, `created_at`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE INDEX `index_users_on_last_seen_at` ON users (`last_seen_at`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE INDEX `index_moderatorships_on_forum_id` ON moderatorships (`forum_id`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 43[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to TopicIndex (44)
+  [4;36;1mSQL (0.015000)[0m   [0;1mCREATE INDEX `index_topics_on_sticky_and_replied_at` ON topics (`sticky`, `replied_at`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 44[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to TweakForumIndex (45)
+  [4;35;1mSQL (0.000000)[0m   [0mDROP INDEX `index_topics_on_sticky_and_replied_at` ON topics[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE INDEX `index_topics_on_sticky_and_replied_at` ON topics (`forum_id`, `sticky`, `replied_at`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 45[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to AddPostsUsersIndex (46)
+  [4;35;1mSQL (0.000000)[0m   [0mDROP INDEX `index_posts_on_user_id` ON posts[0m
+  [4;36;1mSQL (0.016000)[0m   [0;1mCREATE INDEX `index_posts_on_user_id` ON posts (`user_id`, `created_at`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 46[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to SetStickyToZero (47)
+  [4;35;1mSetStickyToZero::Topic Update (0.000000)[0m   [0mUPDATE topics SET sticky = 0 WHERE (sticky is null) [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 47[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT * FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW TABLES[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW FIELDS FROM forums[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW KEYS FROM forums[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW FIELDS FROM logged_exceptions[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW KEYS FROM logged_exceptions[0m
+  [4;35;1mSQL (0.015000)[0m   [0mSHOW FIELDS FROM moderatorships[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW KEYS FROM moderatorships[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW FIELDS FROM monitorships[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW KEYS FROM monitorships[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW KEYS FROM posts[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW FIELDS FROM sessions[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW KEYS FROM sessions[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW FIELDS FROM topics[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW KEYS FROM topics[0m
+  [4;35;1mSQL (0.016000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM forums[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM forums[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM logged_exceptions[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM logged_exceptions[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM moderatorships[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM moderatorships[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM monitorships[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM monitorships[0m
+  [4;36;1mSQL (0.016000)[0m   [0;1mSHOW FIELDS FROM posts[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM sessions[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM sessions[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM topics[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM topics[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM users[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mDROP DATABASE IF EXISTS `beast_test`[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE DATABASE `beast_test`[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Unknown table 'forums': DROP TABLE forums[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE TABLE forums (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT NULL, `description` varchar(255) DEFAULT NULL, `topics_count` int(11) DEFAULT 0, `posts_count` int(11) DEFAULT 0, `position` int(11) DEFAULT NULL, `description_html` text DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Unknown table 'logged_exceptions': DROP TABLE logged_exceptions[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE TABLE logged_exceptions (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `exception_class` varchar(255) DEFAULT NULL, `controller_name` varchar(255) DEFAULT NULL, `action_name` varchar(255) DEFAULT NULL, `message` varchar(255) DEFAULT NULL, `backtrace` text DEFAULT NULL, `environment` text DEFAULT NULL, `request` text DEFAULT NULL, `created_at` datetime DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Unknown table 'moderatorships': DROP TABLE moderatorships[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE TABLE moderatorships (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `forum_id` int(11) DEFAULT NULL, `user_id` int(11) DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE INDEX `index_moderatorships_on_forum_id` ON moderatorships (`forum_id`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Unknown table 'monitorships': DROP TABLE monitorships[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE TABLE monitorships (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `topic_id` int(11) DEFAULT NULL, `user_id` int(11) DEFAULT NULL, `active` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Unknown table 'posts': DROP TABLE posts[0m
+  [4;36;1mSQL (0.015000)[0m   [0;1mCREATE TABLE posts (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `user_id` int(11) DEFAULT NULL, `topic_id` int(11) DEFAULT NULL, `body` text DEFAULT NULL, `created_at` datetime DEFAULT NULL, `updated_at` datetime DEFAULT NULL, `forum_id` int(11) DEFAULT NULL, `body_html` text DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE INDEX `index_posts_on_forum_id` ON posts (`forum_id`, `created_at`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE INDEX `index_posts_on_user_id` ON posts (`user_id`, `created_at`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: #42S02Unknown table 'sessions': DROP TABLE sessions[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE TABLE sessions (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `session_id` varchar(255) DEFAULT NULL, `data` text DEFAULT NULL, `updated_at` datetime DEFAULT NULL, `user_id` int(11) DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.016000)[0m   [0mCREATE INDEX `index_sessions_on_session_id` ON sessions (`session_id`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Unknown table 'topics': DROP TABLE topics[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE TABLE topics (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `forum_id` int(11) DEFAULT NULL, `user_id` int(11) DEFAULT NULL, `title` varchar(255) DEFAULT NULL, `created_at` datetime DEFAULT NULL, `updated_at` datetime DEFAULT NULL, `hits` int(11) DEFAULT 0, `sticky` int(11) DEFAULT 0, `posts_count` int(11) DEFAULT 0, `replied_at` datetime DEFAULT NULL, `locked` tinyint(1) DEFAULT 0, `replied_by` int(11) DEFAULT NULL, `last_post_id` int(11) DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE INDEX `index_topics_on_forum_id` ON topics (`forum_id`)[0m
+  [4;35;1mSQL (0.016000)[0m   [0mCREATE INDEX `index_topics_on_sticky_and_replied_at` ON topics (`forum_id`, `sticky`, `replied_at`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: #42S02Unknown table 'users': DROP TABLE users[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `login` varchar(255) DEFAULT NULL, `email` varchar(255) DEFAULT NULL, `password_hash` varchar(255) DEFAULT NULL, `created_at` datetime DEFAULT NULL, `last_login_at` datetime DEFAULT NULL, `admin` tinyint(1) DEFAULT NULL, `posts_count` int(11) DEFAULT 0, `last_seen_at` datetime DEFAULT NULL, `display_name` varchar(255) DEFAULT NULL, `updated_at` datetime DEFAULT NULL, `website` varchar(255) DEFAULT NULL, `login_key` varchar(255) DEFAULT NULL, `login_key_expires_at` datetime DEFAULT NULL, `activated` tinyint(1) DEFAULT 0, `bio` varchar(255) DEFAULT NULL, `bio_html` text DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.015000)[0m   [0;1mCREATE INDEX `index_users_on_last_seen_at` ON users (`last_seen_at`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE TABLE schema_info (version int(11))[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mINSERT INTO schema_info (version) VALUES(0)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW FIELDS FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 47[0m
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-02-09 08:44:28) [GET]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums ORDER BY position[0m
+Rendering content_typetext/htmllayoutfalseactionindex within layouts/application
+Rendering forums/index
+  [4;35;1mTopic Columns (0.000000)[0m   [0mSHOW FIELDS FROM topics[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM topics [0m
+  [4;35;1mPost Columns (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM posts [0m
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM users WHERE (posts_count>0) [0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (last_seen_at > '2007-02-09 14:39:28') [0m
+Completed in 0.15700 (6 reqs/sec) | Rendering: 0.14100 (89%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing UsersController#index (for 127.0.0.1 at 2007-02-09 08:44:35) [GET]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"action"=>"index", "controller"=>"users"}
+  [4;36;1mUser Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM users [0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users ORDER BY display_name LIMIT 0, 50[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM users [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM users WHERE (posts_count > 0) [0m
+Rendering  within layouts/application
+Rendering users/index
+Completed in 0.03100 (32 reqs/sec) | Rendering: 0.01500 (48%) | DB: 0.00000 (0%) | 200 OK [http://localhost/users]
+
+
+Processing UsersController#new (for 127.0.0.1 at 2007-02-09 08:44:38) [GET]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"action"=>"new", "controller"=>"users"}
+  [4;35;1mUser Columns (0.016000)[0m   [0mSHOW FIELDS FROM users[0m
+Rendering  within layouts/application
+Rendering users/new
+Rendered users/_form (0.00000)
+Completed in 0.03100 (32 reqs/sec) | Rendering: 0.00000 (0%) | DB: 0.01600 (51%) | 200 OK [http://localhost/signup]
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-02-11 09:36:54) [GET]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums ORDER BY position[0m
+Rendering content_typetext/htmllayoutfalseactionindex within layouts/application
+Rendering forums/index
+  [4;35;1mTopic Columns (0.000000)[0m   [0mSHOW FIELDS FROM topics[0m
+  [4;36;1mSQL (0.016000)[0m   [0;1mSELECT count(*) AS count_all FROM topics [0m
+  [4;35;1mPost Columns (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM posts [0m
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM users WHERE (posts_count>0) [0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (last_seen_at > '2007-02-11 15:31:54') [0m
+Completed in 0.17200 (5 reqs/sec) | Rendering: 0.14000 (81%) | DB: 0.01600 (9%) | 200 OK [http://localhost/]
+
+
+Processing UsersController#index (for 127.0.0.1 at 2007-02-11 09:36:57) [GET]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"action"=>"index", "controller"=>"users"}
+  [4;36;1mUser Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM users [0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users ORDER BY display_name LIMIT 0, 50[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM users [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM users WHERE (posts_count > 0) [0m
+Rendering  within layouts/application
+Rendering users/index
+Completed in 0.03100 (32 reqs/sec) | Rendering: 0.01500 (48%) | DB: 0.00000 (0%) | 200 OK [http://localhost/users]
+
+
+Processing UsersController#new (for 127.0.0.1 at 2007-02-11 09:36:59) [GET]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"action"=>"new", "controller"=>"users"}
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+Rendering  within layouts/application
+Rendering users/new
+Rendered users/_form (0.00000)
+Completed in 0.01500 (66 reqs/sec) | Rendering: 0.00000 (0%) | DB: 0.00000 (0%) | 200 OK [http://localhost/signup]
+
+
+Processing UsersController#create (for 127.0.0.1 at 2007-02-11 09:37:19) [POST]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"user"=>{"password_confirmation"=>"ingenius", "display_name"=>"Enrico Brunetta", "login"=>"enrico", "password"=>"ingenius", "email"=>"enrico@motive.com"}, "commit"=>"Sign up!", "action"=>"create", "controller"=>"users"}
+  [4;36;1mUser Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.000000)[0m   [0mBEGIN[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (UPPER(users.login) = 'ENRICO') LIMIT 1[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (UPPER(users.email) = 'ENRICO@MOTIVE.COM') LIMIT 1[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (UPPER(users.display_name) = 'ENRICO BRUNETTA') LIMIT 1[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM users [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mINSERT INTO users (`last_login_at`, `updated_at`, `bio_html`, `login_key`, `login_key_expires_at`, `last_seen_at`, `admin`, `website`, `activated`, `password_hash`, `posts_count`, `bio`, `display_name`, `login`, `created_at`, `email`) VALUES(NULL, '2007-02-11 15:37:19', '', 'a73097f583578b58e7a479fe15a8385515f51c74', '2008-02-11 21:37:19', NULL, 1, NULL, 1, '9c99f3b171e0e8076c3fbaaeaa3f11a6cb501aa7', 0, NULL, 'Enrico Brunetta', 'enrico', '2007-02-11 15:37:19', 'enrico@motive.com')[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCOMMIT[0m
+Sent mail:
+ Date: Sun, 11 Feb 2007 09:37:19 -0600
+From: 3001
+To: enrico@motive.com
+Subject: Welcome to Beast
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+
+Welcome to Beast, Enrico Brunetta!
+
+Please visit the link below to activate your account.
+
+http://localhost:3001/activate/a73097f583578b58e7a479fe15a8385515f51c74
+Redirected to http://localhost:3001/login
+Completed in 1.01600 (0 reqs/sec) | DB: 0.00000 (0%) | 302 Found [http://localhost/users]
+
+
+Processing SessionsController#new (for 127.0.0.1 at 2007-02-11 09:37:20) [GET]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"action"=>"new", "controller"=>"sessions"}
+Rendering  within layouts/application
+Rendering sessions/new
+Completed in 0.01600 (62 reqs/sec) | Rendering: 0.01600 (100%) | DB: 0.00000 (0%) | 200 OK [http://localhost/login]
+
+
+Processing UsersController#activate (for 127.0.0.1 at 2007-02-11 09:37:46) [GET]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"action"=>"activate", "controller"=>"users", "key"=>"a73097f583578b58e7a479fe15a8385515f51c74"}
+  [4;36;1mUser Columns (0.015000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (users.`login_key` = 'a73097f583578b58e7a479fe15a8385515f51c74') LIMIT 1[0m
+  [4;36;1mUser Update (0.000000)[0m   [0;1mUPDATE users SET last_seen_at = '2007-02-11 15:37:46' WHERE (id = 1) [0m
+Redirected to http://localhost:3001/
+Completed in 0.03100 (32 reqs/sec) | DB: 0.01500 (48%) | 302 Found [http://localhost/activate/a73097f583578b58e7a479fe15a8385515f51c74]
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-02-11 09:37:47) [GET]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums ORDER BY position[0m
+Rendering content_typetext/htmllayoutfalseactionindex within layouts/application
+Rendering forums/index
+  [4;36;1mUser Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;36;1mTopic Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM topics[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM topics [0m
+  [4;36;1mPost Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM posts[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM posts [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM users WHERE (posts_count>0) [0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (last_seen_at > '2007-02-11 15:32:47') [0m
+Completed in 0.07800 (12 reqs/sec) | Rendering: 0.06300 (80%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-02-11 09:37:59) [GET]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums ORDER BY position[0m
+Rendering content_typetext/htmllayoutfalseactionindex within layouts/application
+Rendering forums/index
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;35;1mTopic Columns (0.000000)[0m   [0mSHOW FIELDS FROM topics[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM topics [0m
+  [4;35;1mPost Columns (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM posts [0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM users WHERE (posts_count>0) [0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (last_seen_at > '2007-02-11 15:33:00') [0m
+Completed in 0.07800 (12 reqs/sec) | Rendering: 0.06200 (79%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-02-11 10:44:39) [GET]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;36;1mUser Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums ORDER BY position[0m
+Rendering content_typetext/htmllayoutfalseactionindex within layouts/application
+Rendering forums/index
+  [4;35;1mTopic Columns (0.000000)[0m   [0mSHOW FIELDS FROM topics[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM topics [0m
+  [4;35;1mPost Columns (0.015000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM posts [0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM users WHERE (posts_count>0) [0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (last_seen_at > '2007-02-11 16:39:39') [0m
+Completed in 0.15600 (6 reqs/sec) | Rendering: 0.11000 (70%) | DB: 0.01500 (9%) | 200 OK [http://localhost/]
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-02-11 10:44:56) [GET]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums ORDER BY position[0m
+Rendering content_typetext/htmllayoutfalseactionindex within layouts/application
+Rendering forums/index
+  [4;36;1mTopic Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM topics[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM topics [0m
+  [4;36;1mPost Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM posts[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM posts [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM users WHERE (posts_count>0) [0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (last_seen_at > '2007-02-11 16:39:56') [0m
+Completed in 0.14000 (7 reqs/sec) | Rendering: 0.10900 (77%) | DB: 0.00000 (0%) | 200 OK [http://localhost/forums]
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-02-11 10:44:59) [GET]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;36;1mUser Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums ORDER BY position[0m
+Rendering content_typetext/htmllayoutfalseactionindex within layouts/application
+Rendering forums/index
+  [4;35;1mTopic Columns (0.000000)[0m   [0mSHOW FIELDS FROM topics[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM topics [0m
+  [4;35;1mPost Columns (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM posts [0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM users WHERE (posts_count>0) [0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (last_seen_at > '2007-02-11 16:39:59') [0m
+Completed in 0.15600 (6 reqs/sec) | Rendering: 0.03100 (19%) | DB: 0.00000 (0%) | 200 OK [http://localhost/forums/]
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-02-11 10:47:06) [GET]
+  Session ID: 6a835ab18d7868962ff067e9dd1a400e
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums ORDER BY position[0m
+Rendering content_typetext/htmllayoutfalseactionindex within layouts/application
+Rendering forums/index
+  [4;36;1mTopic Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM topics[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM topics [0m
+  [4;36;1mPost Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM posts[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM posts [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM users WHERE (posts_count>0) [0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (last_seen_at > '2007-02-11 16:42:06') [0m
+Completed in 0.18800 (5 reqs/sec) | Rendering: 0.15600 (82%) | DB: 0.00000 (0%) | 200 OK [http://localhost/]
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-02-11 14:45:37) [GET]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums ORDER BY position[0m
+Rendering content_typetext/htmllayoutfalseactionindex within layouts/application
+Rendering forums/index
+  [4;35;1mTopic Columns (0.015000)[0m   [0mSHOW FIELDS FROM topics[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM topics [0m
+  [4;35;1mPost Columns (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM posts [0m
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM users WHERE (posts_count>0) [0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (last_seen_at > '2007-02-11 20:40:37') [0m
+Completed in 0.17200 (5 reqs/sec) | Rendering: 0.14100 (81%) | DB: 0.01500 (8%) | 200 OK [http://127.0.0.1/]
+
+
+Processing PostsController#index (for 127.0.0.1 at 2007-02-11 14:45:41) [GET]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"action"=>"index", "controller"=>"posts"}
+  [4;36;1mPost Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM posts[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM posts inner join topics on posts.topic_id = topics.id inner join forums on topics.forum_id = forums.id [0m
+  [4;36;1mPost Load (0.000000)[0m   [0;1mSELECT posts.*, topics.title as topic_title, forums.name as forum_name FROM posts inner join topics on posts.topic_id = topics.id inner join forums on topics.forum_id = forums.id ORDER BY posts.created_at desc LIMIT 0, 25[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT distinct * FROM users WHERE (id in (NULL)) [0m
+Rendering layoutfalseactionindex.rhtml within layouts/application
+Rendering posts/index.rhtml
+Completed in 0.03100 (32 reqs/sec) | Rendering: 0.01600 (51%) | DB: 0.00000 (0%) | 200 OK [http://127.0.0.1/posts]
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-02-11 14:45:44) [GET]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums ORDER BY position[0m
+Rendering content_typetext/htmllayoutfalseactionindex within layouts/application
+Rendering forums/index
+  [4;35;1mTopic Columns (0.000000)[0m   [0mSHOW FIELDS FROM topics[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM topics [0m
+  [4;35;1mPost Columns (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM posts [0m
+  [4;35;1mUser Columns (0.016000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM users WHERE (posts_count>0) [0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (last_seen_at > '2007-02-11 20:40:44') [0m
+Completed in 0.14100 (7 reqs/sec) | Rendering: 0.10900 (77%) | DB: 0.01600 (11%) | 200 OK [http://127.0.0.1/]
+
+
+Processing SessionsController#new (for 127.0.0.1 at 2007-02-11 14:45:47) [GET]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"action"=>"new", "controller"=>"sessions"}
+Rendering  within layouts/application
+Rendering sessions/new
+Completed in 0.00010 (10000 reqs/sec) | Rendering: 0.00000 (0%) | DB: 0.00000 (0%) | 200 OK [http://127.0.0.1/login]
+
+
+Processing SessionsController#create (for 127.0.0.1 at 2007-02-11 14:45:56) [POST]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"commit"=>"Login", "action"=>"create", "controller"=>"sessions", "login"=>"enrico", "password"=>"ingenius", "remember_me"=>"1"}
+  [4;36;1mUser Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (users.`activated` = 1 AND users.`password_hash` = '9c99f3b171e0e8076c3fbaaeaa3f11a6cb501aa7' AND users.`login` = 'enrico') LIMIT 1[0m
+  [4;36;1mUser Update (0.000000)[0m   [0;1mUPDATE users SET last_seen_at = '2007-02-11 20:45:56' WHERE (id = 1) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mBEGIN[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (UPPER(users.login) = 'ENRICO' AND users.id <> 1) LIMIT 1[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (UPPER(users.email) = 'ENRICO@MOTIVE.COM' AND users.id <> 1) LIMIT 1[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (UPPER(users.display_name) = 'ENRICO BRUNETTA' AND users.id <> 1) LIMIT 1[0m
+  [4;35;1mUser Update (0.000000)[0m   [0mUPDATE users SET `created_at` = '2007-02-11 15:37:19', `login` = 'enrico', `login_key_expires_at` = '2008-02-12 02:45:56', `display_name` = 'Enrico Brunetta', `bio` = NULL, `activated` = 1, `login_key` = 'd9b3fe8829c5d674ccdccec3349135bb20a1809e', `admin` = 1, `posts_count` = 0, `password_hash` = '9c99f3b171e0e8076c3fbaaeaa3f11a6cb501aa7', `last_seen_at` = '2007-02-11 20:45:56', `last_login_at` = NULL, `email` = 'enrico@motive.com', `bio_html` = '', `website` = NULL, `updated_at` = '2007-02-11 20:45:56' WHERE id = 1[0m
+  [4;36;1mSQL (0.016000)[0m   [0;1mCOMMIT[0m
+Cookie set: login_token=1%3Bd9b3fe8829c5d674ccdccec3349135bb20a1809e; path=/; expires=Tue, 12 Feb 2008 02:45:56 GMT
+Redirected to http://127.0.0.1:3001/
+Completed in 0.04700 (21 reqs/sec) | DB: 0.01600 (34%) | 302 Found [http://127.0.0.1/sessions]
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-02-11 14:45:57) [GET]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums ORDER BY position[0m
+Rendering content_typetext/htmllayoutfalseactionindex within layouts/application
+Rendering forums/index
+  [4;36;1mTopic Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM topics[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM topics [0m
+  [4;36;1mPost Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM posts[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM posts [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM users WHERE (posts_count>0) [0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (last_seen_at > '2007-02-11 20:40:57') [0m
+Completed in 0.07900 (12 reqs/sec) | Rendering: 0.04700 (59%) | DB: 0.00000 (0%) | 200 OK [http://127.0.0.1/]
+
+
+Processing ForumsController#new (for 127.0.0.1 at 2007-02-11 14:46:04) [GET]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"action"=>"new", "controller"=>"forums"}
+  [4;36;1mUser Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;36;1mForum Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM forums[0m
+Rendering  within layouts/application
+Rendering forums/new
+Rendered forums/_form (0.00000)
+Completed in 0.04700 (21 reqs/sec) | Rendering: 0.01500 (31%) | DB: 0.00000 (0%) | 200 OK [http://127.0.0.1/forums/new]
+
+
+Processing ForumsController#create (for 127.0.0.1 at 2007-02-11 14:46:12) [POST]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"commit"=>"Create", "forum"=>{"name"=>"Hello", "description"=>"Hello", "position"=>"1"}, "action"=>"create", "controller"=>"forums"}
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;35;1mForum Columns (0.000000)[0m   [0mSHOW FIELDS FROM forums[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mBEGIN[0m
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums WHERE (1 = 1) ORDER BY position DESC LIMIT 1[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mINSERT INTO forums (`name`, `topics_count`, `description_html`, `description`, `posts_count`, `position`) VALUES('Hello', 0, '<p>Hello</p>', 'Hello', 0, 1)[0m
+  [4;35;1mSQL (0.016000)[0m   [0mCOMMIT[0m
+Redirected to http://127.0.0.1:3001/forums
+Completed in 0.04700 (21 reqs/sec) | DB: 0.01600 (34%) | 302 Found [http://127.0.0.1/forums]
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-02-11 14:46:13) [GET]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;36;1mUser Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums ORDER BY position[0m
+Rendering content_typetext/htmllayoutfalseactionindex within layouts/application
+Rendering forums/index
+  [4;35;1mTopic Columns (0.000000)[0m   [0mSHOW FIELDS FROM topics[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM topics [0m
+  [4;35;1mPost Columns (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM posts [0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM users WHERE (posts_count>0) [0m
+  [4;36;1mForum Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM forums[0m
+  [4;35;1mTopic Load (0.000000)[0m   [0mSELECT * FROM topics WHERE (topics.forum_id = 1) ORDER BY sticky desc, replied_at desc LIMIT 1[0m
+  [4;36;1mPost Load Including Associations (0.000000)[0m   [0;1mSELECT posts.`id` AS t0_r0, posts.`user_id` AS t0_r1, posts.`topic_id` AS t0_r2, posts.`body` AS t0_r3, posts.`created_at` AS t0_r4, posts.`updated_at` AS t0_r5, posts.`forum_id` AS t0_r6, posts.`body_html` AS t0_r7, users.`id` AS t1_r0, users.`login` AS t1_r1, users.`email` AS t1_r2, users.`password_hash` AS t1_r3, users.`created_at` AS t1_r4, users.`last_login_at` AS t1_r5, users.`admin` AS t1_r6, users.`posts_count` AS t1_r7, users.`last_seen_at` AS t1_r8, users.`display_name` AS t1_r9, users.`updated_at` AS t1_r10, users.`website` AS t1_r11, users.`login_key` AS t1_r12, users.`login_key_expires_at` AS t1_r13, users.`activated` AS t1_r14, users.`bio` AS t1_r15, users.`bio_html` AS t1_r16 FROM posts LEFT OUTER JOIN users ON users.id = posts.user_id WHERE (posts.forum_id = 1) ORDER BY posts.created_at desc[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (last_seen_at > '2007-02-11 20:41:13') [0m
+Completed in 0.07800 (12 reqs/sec) | Rendering: 0.04700 (60%) | DB: 0.00000 (0%) | 200 OK [http://127.0.0.1/forums]
+
+
+Processing ForumsController#show (for 127.0.0.1 at 2007-02-11 16:50:54) [GET]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"action"=>"show", "id"=>"1", "controller"=>"forums"}
+  [4;36;1mUser Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;36;1mForum Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM forums[0m
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums WHERE (forums.id = 1) [0m
+  [4;36;1mTopic Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM topics[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(DISTINCT topics.id) AS count_all FROM topics LEFT OUTER JOIN users ON users.id = topics.replied_by WHERE (forum_id = '1') [0m
+  [4;36;1mTopic Load Including Associations (0.000000)[0m   [0;1mSELECT topics.`id` AS t0_r0, topics.`forum_id` AS t0_r1, topics.`user_id` AS t0_r2, topics.`title` AS t0_r3, topics.`created_at` AS t0_r4, topics.`updated_at` AS t0_r5, topics.`hits` AS t0_r6, topics.`sticky` AS t0_r7, topics.`posts_count` AS t0_r8, topics.`replied_at` AS t0_r9, topics.`locked` AS t0_r10, topics.`replied_by` AS t0_r11, topics.`last_post_id` AS t0_r12, users.`id` AS t1_r0, users.`login` AS t1_r1, users.`email` AS t1_r2, users.`password_hash` AS t1_r3, users.`created_at` AS t1_r4, users.`last_login_at` AS t1_r5, users.`admin` AS t1_r6, users.`posts_count` AS t1_r7, users.`last_seen_at` AS t1_r8, users.`display_name` AS t1_r9, users.`updated_at` AS t1_r10, users.`website` AS t1_r11, users.`login_key` AS t1_r12, users.`login_key_expires_at` AS t1_r13, users.`activated` AS t1_r14, users.`bio` AS t1_r15, users.`bio_html` AS t1_r16 FROM topics LEFT OUTER JOIN users ON users.id = topics.replied_by WHERE (forum_id = '1') ORDER BY sticky desc, replied_at desc LIMIT 0, 25[0m
+Rendering  within layouts/application
+Rendering forums/show
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT users.* FROM users INNER JOIN moderatorships ON users.id = moderatorships.user_id WHERE ((moderatorships.forum_id = 1)) ORDER BY users.login[0m
+Completed in 0.07800 (12 reqs/sec) | Rendering: 0.03100 (39%) | DB: 0.00000 (0%) | 200 OK [http://127.0.0.1/forums/1]
+
+
+Processing TopicsController#new (for 127.0.0.1 at 2007-02-11 16:50:56) [GET]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"action"=>"new", "controller"=>"topics", "forum_id"=>"1"}
+  [4;36;1mUser Columns (0.015000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;36;1mForum Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM forums[0m
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums WHERE (forums.id = 1) [0m
+  [4;36;1mTopic Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM topics[0m
+Rendering  within layouts/application
+Rendering topics/new
+Rendered topics/_form (0.01600)
+Completed in 0.07800 (12 reqs/sec) | Rendering: 0.01600 (20%) | DB: 0.01500 (19%) | 200 OK [http://127.0.0.1/forums/1/topics/new]
+
+
+Processing TopicsController#create (for 127.0.0.1 at 2007-02-11 16:51:01) [POST]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"commit"=>"Post Topic", "topic"=>{"body"=>"dfhgdfhg", "title"=>"ddfghdfhg", "sticky"=>"0", "locked"=>"0"}, "action"=>"create", "controller"=>"topics", "forum_id"=>"1"}
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;35;1mForum Columns (0.015000)[0m   [0mSHOW FIELDS FROM forums[0m
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums WHERE (forums.id = 1) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mBEGIN[0m
+  [4;36;1mTopic Columns (0.016000)[0m   [0;1mSHOW FIELDS FROM topics[0m
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums WHERE (forums.id = 1) [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mINSERT INTO topics (`hits`, `updated_at`, `title`, `replied_at`, `last_post_id`, `forum_id`, `posts_count`, `replied_by`, `user_id`, `sticky`, `created_at`, `locked`) VALUES(0, '2007-02-11 22:51:01', 'ddfghdfhg', '2007-02-11 22:51:01', NULL, 1, 0, NULL, 1, 0, '2007-02-11 22:51:01', 0)[0m
+  [4;35;1mForum Update (0.000000)[0m   [0mUPDATE forums SET topics_count = topics_count + 1 WHERE (id = 1) [0m
+  [4;36;1mPost Update (0.016000)[0m   [0;1mUPDATE posts SET forum_id = 1 WHERE (topic_id = 1) [0m
+  [4;35;1mPost Columns (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mTopic Load (0.000000)[0m   [0;1mSELECT * FROM topics WHERE (topics.id = 1) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mINSERT INTO posts (`topic_id`, `body_html`, `updated_at`, `body`, `forum_id`, `user_id`, `created_at`) VALUES(1, '<p>dfhgdfhg</p>', '2007-02-11 22:51:01', 'dfhgdfhg', 1, 1, '2007-02-11 22:51:01')[0m
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums WHERE (forums.id = 1) [0m
+  [4;35;1mForum Update (0.000000)[0m   [0mUPDATE forums SET posts_count = posts_count + 1 WHERE (id = 1) [0m
+  [4;36;1mUser Update (0.000000)[0m   [0;1mUPDATE users SET posts_count = posts_count + 1 WHERE (id = 1) [0m
+  [4;35;1mTopic Update (0.000000)[0m   [0mUPDATE topics SET posts_count = posts_count + 1 WHERE (id = 1) [0m
+  [4;36;1mTopic Update (0.000000)[0m   [0;1mUPDATE topics SET replied_at = '2007-02-11 22:51:01', replied_by = 1, last_post_id = 1 WHERE (id = 1) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mCOMMIT[0m
+Redirected to http://127.0.0.1:3001/forums/1/topics/1
+Completed in 0.07800 (12 reqs/sec) | DB: 0.04700 (60%) | 302 Found [http://127.0.0.1/forums/1/topics]
+
+
+Processing TopicsController#show (for 127.0.0.1 at 2007-02-11 16:51:02) [GET]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"action"=>"show", "id"=>"1", "controller"=>"topics", "forum_id"=>"1"}
+  [4;36;1mUser Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;36;1mForum Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM forums[0m
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums WHERE (forums.id = 1) [0m
+  [4;36;1mTopic Columns (0.078000)[0m   [0;1mSHOW FIELDS FROM topics[0m
+  [4;35;1mTopic Load (0.000000)[0m   [0mSELECT * FROM topics WHERE (topics.id = 1 AND (topics.forum_id = 1)) ORDER BY sticky desc, replied_at desc[0m
+  [4;36;1mUser Update (0.000000)[0m   [0;1mUPDATE users SET last_seen_at = '2007-02-11 22:51:02' WHERE (id = 1) [0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (users.id = 1) [0m
+  [4;36;1mPost Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM posts[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(DISTINCT posts.id) AS count_all FROM posts LEFT OUTER JOIN users ON users.id = posts.user_id WHERE (posts.topic_id = '1') [0m
+  [4;36;1mPost Load Including Associations (0.000000)[0m   [0;1mSELECT posts.`id` AS t0_r0, posts.`user_id` AS t0_r1, posts.`topic_id` AS t0_r2, posts.`body` AS t0_r3, posts.`created_at` AS t0_r4, posts.`updated_at` AS t0_r5, posts.`forum_id` AS t0_r6, posts.`body_html` AS t0_r7, users.`id` AS t1_r0, users.`login` AS t1_r1, users.`email` AS t1_r2, users.`password_hash` AS t1_r3, users.`created_at` AS t1_r4, users.`last_login_at` AS t1_r5, users.`admin` AS t1_r6, users.`posts_count` AS t1_r7, users.`last_seen_at` AS t1_r8, users.`display_name` AS t1_r9, users.`updated_at` AS t1_r10, users.`website` AS t1_r11, users.`login_key` AS t1_r12, users.`login_key_expires_at` AS t1_r13, users.`activated` AS t1_r14, users.`bio` AS t1_r15, users.`bio_html` AS t1_r16 FROM posts LEFT OUTER JOIN users ON users.id = posts.user_id WHERE (posts.topic_id = '1') ORDER BY posts.created_at LIMIT 0, 25[0m
+Rendering  within layouts/application
+Rendering topics/show
+  [4;35;1mMonitorship Columns (0.000000)[0m   [0mSHOW FIELDS FROM monitorships[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM monitorships WHERE (user_id = 1 and topic_id = 1 and active = 1) [0m
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums WHERE (forums.id = 1) [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM posts WHERE (posts.topic_id = 1) [0m
+  [4;35;1mPost Load (0.000000)[0m   [0mSELECT * FROM posts WHERE (posts.topic_id = 1) ORDER BY posts.created_at[0m
+Completed in 0.17200 (5 reqs/sec) | Rendering: 0.04700 (27%) | DB: 0.07800 (45%) | 200 OK [http://127.0.0.1/forums/1/topics/1]
+
+
+Processing PostsController#create (for 127.0.0.1 at 2007-02-11 16:51:53) [POST]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"topic_id"=>"1", "commit"=>"Save Reply", "post"=>{"body"=>"bq. enrico brunetta\r\n\r\nthis is my post"}, "action"=>"create", "controller"=>"posts", "forum_id"=>"1", "page"=>"1"}
+  [4;36;1mUser Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mUser Load (0.015000)[0m   [0mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;36;1mTopic Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM topics[0m
+  [4;35;1mForum Columns (0.000000)[0m   [0mSHOW FIELDS FROM forums[0m
+  [4;36;1mTopic Load Including Associations (0.000000)[0m   [0;1mSELECT topics.`id` AS t0_r0, topics.`forum_id` AS t0_r1, topics.`user_id` AS t0_r2, topics.`title` AS t0_r3, topics.`created_at` AS t0_r4, topics.`updated_at` AS t0_r5, topics.`hits` AS t0_r6, topics.`sticky` AS t0_r7, topics.`posts_count` AS t0_r8, topics.`replied_at` AS t0_r9, topics.`locked` AS t0_r10, topics.`replied_by` AS t0_r11, topics.`last_post_id` AS t0_r12, forums.`id` AS t1_r0, forums.`name` AS t1_r1, forums.`description` AS t1_r2, forums.`topics_count` AS t1_r3, forums.`posts_count` AS t1_r4, forums.`position` AS t1_r5, forums.`description_html` AS t1_r6 FROM topics LEFT OUTER JOIN forums ON forums.id = topics.forum_id WHERE (topics.`id` = '1' AND topics.`forum_id` = '1') [0m
+  [4;35;1mPost Columns (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mBEGIN[0m
+  [4;35;1mTopic Load (0.000000)[0m   [0mSELECT * FROM topics WHERE (topics.id = 1) [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mINSERT INTO posts (`topic_id`, `body_html`, `updated_at`, `body`, `forum_id`, `user_id`, `created_at`) VALUES(1, '<blockquote>\n		<p>enrico brunetta</p>\n	</blockquote>\n\n\n	<p>this is my post</p>', '2007-02-11 22:51:53', 'bq. enrico brunetta\r\n\r\nthis is my post', 1, 1, '2007-02-11 22:51:53')[0m
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums WHERE (forums.id = 1) [0m
+  [4;36;1mForum Update (0.000000)[0m   [0;1mUPDATE forums SET posts_count = posts_count + 1 WHERE (id = 1) [0m
+  [4;35;1mUser Update (0.015000)[0m   [0mUPDATE users SET posts_count = posts_count + 1 WHERE (id = 1) [0m
+  [4;36;1mTopic Update (0.000000)[0m   [0;1mUPDATE topics SET posts_count = posts_count + 1 WHERE (id = 1) [0m
+  [4;35;1mTopic Update (0.000000)[0m   [0mUPDATE topics SET replied_at = '2007-02-11 22:51:53', replied_by = 1, last_post_id = 2 WHERE (id = 1) [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCOMMIT[0m
+Redirected to http://127.0.0.1:3001/forums/1/topics/1?page=1#posts-2
+Completed in 0.07800 (12 reqs/sec) | DB: 0.03000 (38%) | 302 Found [http://127.0.0.1/forums/1/topics/1/posts?page=1]
+
+
+Processing TopicsController#show (for 127.0.0.1 at 2007-02-11 16:51:54) [GET]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"action"=>"show", "id"=>"1", "controller"=>"topics", "forum_id"=>"1", "page"=>"1"}
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mUser Load (0.016000)[0m   [0;1mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;35;1mForum Columns (0.000000)[0m   [0mSHOW FIELDS FROM forums[0m
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums WHERE (forums.id = 1) [0m
+  [4;35;1mTopic Columns (0.000000)[0m   [0mSHOW FIELDS FROM topics[0m
+  [4;36;1mTopic Load (0.000000)[0m   [0;1mSELECT * FROM topics WHERE (topics.id = 1 AND (topics.forum_id = 1)) ORDER BY sticky desc, replied_at desc[0m
+  [4;35;1mUser Update (0.000000)[0m   [0mUPDATE users SET last_seen_at = '2007-02-11 22:51:54' WHERE (id = 1) [0m
+  [4;36;1mUser Load (0.016000)[0m   [0;1mSELECT * FROM users WHERE (users.id = 1) [0m
+  [4;35;1mPost Columns (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(DISTINCT posts.id) AS count_all FROM posts LEFT OUTER JOIN users ON users.id = posts.user_id WHERE (posts.topic_id = '1') [0m
+  [4;35;1mPost Load Including Associations (0.000000)[0m   [0mSELECT posts.`id` AS t0_r0, posts.`user_id` AS t0_r1, posts.`topic_id` AS t0_r2, posts.`body` AS t0_r3, posts.`created_at` AS t0_r4, posts.`updated_at` AS t0_r5, posts.`forum_id` AS t0_r6, posts.`body_html` AS t0_r7, users.`id` AS t1_r0, users.`login` AS t1_r1, users.`email` AS t1_r2, users.`password_hash` AS t1_r3, users.`created_at` AS t1_r4, users.`last_login_at` AS t1_r5, users.`admin` AS t1_r6, users.`posts_count` AS t1_r7, users.`last_seen_at` AS t1_r8, users.`display_name` AS t1_r9, users.`updated_at` AS t1_r10, users.`website` AS t1_r11, users.`login_key` AS t1_r12, users.`login_key_expires_at` AS t1_r13, users.`activated` AS t1_r14, users.`bio` AS t1_r15, users.`bio_html` AS t1_r16 FROM posts LEFT OUTER JOIN users ON users.id = posts.user_id WHERE (posts.topic_id = '1') ORDER BY posts.created_at LIMIT 0, 25[0m
+Rendering  within layouts/application
+Rendering topics/show
+  [4;36;1mMonitorship Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM monitorships[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM monitorships WHERE (user_id = 1 and topic_id = 1 and active = 1) [0m
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums WHERE (forums.id = 1) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT count(*) AS count_all FROM posts WHERE (posts.topic_id = 1) [0m
+  [4;36;1mPost Load (0.000000)[0m   [0;1mSELECT * FROM posts WHERE (posts.topic_id = 1) ORDER BY posts.created_at[0m
+Completed in 0.09400 (10 reqs/sec) | Rendering: 0.03100 (32%) | DB: 0.03200 (34%) | 200 OK [http://127.0.0.1/forums/1/topics/1?page=1]
+
+
+Processing MonitorshipsController#create (for 127.0.0.1 at 2007-02-11 16:52:42) [POST]
+  Session ID: 8e226191cf5289e6e4ce8296b0cfdbd4
+  Parameters: {"topic_id"=>"1", "action"=>"create", "controller"=>"monitorships", "forum_id"=>"1"}
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (users.`id` = 1) LIMIT 1[0m
+  [4;35;1mMonitorship Columns (0.000000)[0m   [0mSHOW FIELDS FROM monitorships[0m
+  [4;36;1mMonitorship Load (0.000000)[0m   [0;1mSELECT * FROM monitorships WHERE (monitorships.`topic_id` = '1' AND monitorships.`user_id` = 1) LIMIT 1[0m
+  [4;35;1mSQL (0.000000)[0m   [0mBEGIN[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mINSERT INTO monitorships (`topic_id`, `user_id`, `active`) VALUES(1, 1, 1)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCOMMIT[0m
+Rendering monitorships/create.rjs
+Completed in 0.04700 (21 reqs/sec) | Rendering: 0.01500 (31%) | DB: 0.00000 (0%) | 200 OK [http://127.0.0.1/forums/1/topics/1/monitorships]
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-04-09 16:58:17) [GET]
+  Session ID: 640fce8e832099dbe5024d3d024f664a
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums ORDER BY position[0m
+Rendering layoutfalsecontent_typetext/htmlactionindex within layouts/application
+Rendering forums/index
+  [4;35;1mTopic Columns (0.000000)[0m   [0mSHOW FIELDS FROM topics[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM topics [0m
+  [4;35;1mPost Columns (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM posts [0m
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM users WHERE (posts_count>0) [0m
+  [4;35;1mForum Columns (0.000000)[0m   [0mSHOW FIELDS FROM forums[0m
+  [4;36;1mPost Load Including Associations (0.000000)[0m   [0;1mSELECT posts.`id` AS t0_r0, posts.`user_id` AS t0_r1, posts.`topic_id` AS t0_r2, posts.`body` AS t0_r3, posts.`created_at` AS t0_r4, posts.`updated_at` AS t0_r5, posts.`forum_id` AS t0_r6, posts.`body_html` AS t0_r7, users.`id` AS t1_r0, users.`login` AS t1_r1, users.`email` AS t1_r2, users.`password_hash` AS t1_r3, users.`created_at` AS t1_r4, users.`last_login_at` AS t1_r5, users.`admin` AS t1_r6, users.`posts_count` AS t1_r7, users.`last_seen_at` AS t1_r8, users.`display_name` AS t1_r9, users.`updated_at` AS t1_r10, users.`website` AS t1_r11, users.`login_key` AS t1_r12, users.`login_key_expires_at` AS t1_r13, users.`activated` AS t1_r14, users.`bio` AS t1_r15, users.`bio_html` AS t1_r16 FROM posts LEFT OUTER JOIN users ON users.id = posts.user_id WHERE (posts.forum_id = 1) ORDER BY posts.created_at desc[0m
+  [4;35;1mTopic Load (0.000000)[0m   [0mSELECT * FROM topics WHERE (topics.`id` = 1) [0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (last_seen_at > '2007-04-09 21:53:18') [0m
+Completed in 0.21800 (4 reqs/sec) | Rendering: 0.20300 (93%) | DB: 0.00000 (0%) | 200 OK [http://127.0.0.1/]
+
+
+Processing LoggedExceptionsController#index (for 127.0.0.1 at 2007-04-09 16:58:28) [GET]
+  Session ID: 640fce8e832099dbe5024d3d024f664a
+  Parameters: {"action"=>"index", "controller"=>"logged_exceptions"}
+Redirected to http://127.0.0.1:3001/login
+Completed in 0.00010 (10000 reqs/sec) | DB: 0.00000 (0%) | 302 Found [http://127.0.0.1/logged_exceptions]
+SessionController: missing default helper path session_helper
+
+
+Processing SessionController#new (for 127.0.0.1 at 2007-04-09 16:58:29) [GET]
+  Session ID: 640fce8e832099dbe5024d3d024f664a
+  Parameters: {"action"=>"new", "controller"=>"session"}
+Rendering  within layouts/application
+Rendering session/new
+Completed in 0.00010 (10000 reqs/sec) | Rendering: 0.00000 (0%) | DB: 0.00000 (0%) | 200 OK [http://127.0.0.1/login]
+SessionController: missing default helper path session_helper
+
+
+Processing SessionController#create (for 127.0.0.1 at 2007-04-09 16:58:34) [POST]
+  Session ID: 640fce8e832099dbe5024d3d024f664a
+  Parameters: {"commit"=>"Login", "action"=>"create", "method"=>:get, "controller"=>"session", "login"=>"enrico", "password"=>"ingenius", "remember_me"=>"1"}
+  [4;35;1mUser Columns (0.016000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (users.`activated` = 1 AND users.`password_hash` = '9c99f3b171e0e8076c3fbaaeaa3f11a6cb501aa7' AND users.`login` = 'enrico') LIMIT 1[0m
+  [4;35;1mUser Update (0.000000)[0m   [0mUPDATE users SET last_seen_at = '2007-04-09 21:58:34' WHERE (id = 1) [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mBEGIN[0m
+  [4;35;1mSQL (0.000000)[0m   [0mROLLBACK[0m
+
+
+NoMethodError (undefined method `identity_url' for #<User:0x78a3124>):
+    C:/ruby/lib/ruby/gems/1.8/gems/activerecord-1.15.3/lib/active_record/baserb:1860:in `method_missing'
+    /app/models/user.rb:33
+    C:/ruby/lib/ruby/gems/1.8/gems/activerecord-1.15.3/lib/active_record/callbacks.rb:337:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/activerecord-1.15.3/lib/active_record/callbacks.rb:337:in `callback'
+    C:/ruby/lib/ruby/gems/1.8/gems/activerecord-1.15.3/lib/active_record/callbacks.rb:330:in `each'
+    C:/ruby/lib/ruby/gems/1.8/gems/activerecord-1.15.3/lib/active_record/callbacks.rb:330:in `callback'
+    C:/ruby/lib/ruby/gems/1.8/gems/activerecord-1.15.3/lib/active_record/callbacks.rb:295:in `valid?'
+    C:/ruby/lib/ruby/gems/1.8/gems/activerecord-1.15.3/lib/active_record/validations.rb:761:in `save_without_transactions!'
+    C:/ruby/lib/ruby/gems/1.8/gems/activerecord-1.15.3/lib/active_record/transactions.rb:133:in `save!'
+    C:/ruby/lib/ruby/gems/1.8/gems/activerecord-1.15.3/lib/active_record/connection_adapters/abstract/database_statements.rb:59:in `transaction'
+    C:/ruby/lib/ruby/gems/1.8/gems/activerecord-1.15.3/lib/active_record/transactions.rb:95:in `transaction'
+    C:/ruby/lib/ruby/gems/1.8/gems/activerecord-1.15.3/lib/active_record/transactions.rb:121:in `transaction'
+    C:/ruby/lib/ruby/gems/1.8/gems/activerecord-1.15.3/lib/active_record/transactions.rb:133:in `save!'
+    /app/models/user.rb:72:in `reset_login_key!'
+    /app/controllers/session_controller.rb:53:in `successful_login'
+    /app/controllers/session_controller.rb:46:in `password_authentication'
+    /app/controllers/session_controller.rb:7:in `create'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:1095:in `send'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:1095:in `perform_action_without_filters'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:632:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:638:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:438:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:637:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:638:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:438:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:637:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:638:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:449:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:637:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:638:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:449:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:637:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:619:in `perform_action_without_benchmark'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/benchmarking.rb:66:in `perform_action_without_rescue'
+    C:/ruby/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/benchmarking.rb:66:in `perform_action_without_rescue'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/rescue.rb:83:in `perform_action'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:430:in `send'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:430:in `process_without_filters'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:624:in `process_without_session_management_support'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/session_management.rb:114:in `process'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:330:in `process'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/dispatcher.rb:41:in `dispatch'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/webrick_server.rb:113:in `handle_dispatch'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/webrick_server.rb:79:in `service'
+    C:/ruby/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    C:/ruby/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `each'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/webrick_server.rb:63:in `dispatch'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/commands/servers/webrick.rb:59
+    C:/ruby/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `gem_original_require'
+    C:/ruby/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:495:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:342:in `new_constants_in'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:495:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/commands/server.rb:39
+    C:/ruby/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `gem_original_require'
+    C:/ruby/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:495:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:342:in `new_constants_in'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:495:in `require'
+    ./script/server:3
+    -e:4:in `load'
+    -e:4
+
+
+Rendering C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+  [4;36;1mSQL (0.000000)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: Table 'schema_info' already exists: CREATE TABLE schema_info (version int(11))[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: Table 'schema_info' already exists: CREATE TABLE schema_info (version int(11))[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to SetStickyToZero (47)
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 46[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to AddPostsUsersIndex (46)
+  [4;36;1mSQL (0.015000)[0m   [0;1mDROP INDEX `index_posts_on_user_id` ON posts[0m
+  [4;35;1mSQL (0.016000)[0m   [0mCREATE INDEX `index_posts_on_user_id` ON posts (`user_id`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 45[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to TweakForumIndex (45)
+  [4;36;1mSQL (0.000000)[0m   [0;1mDROP INDEX `index_topics_on_sticky_and_replied_at` ON topics[0m
+  [4;35;1mSQL (0.016000)[0m   [0mCREATE INDEX `index_topics_on_sticky_and_replied_at` ON topics (`sticky`, `replied_at`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 44[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to TopicIndex (44)
+  [4;36;1mSQL (0.000000)[0m   [0;1mDROP INDEX `index_topics_on_sticky_and_replied_at` ON topics[0m
+  [4;35;1mSQL (0.015000)[0m   [0mUPDATE schema_info SET version = 43[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to IndexHappy (43)
+  [4;35;1mSQL (0.000000)[0m   [0mDROP INDEX `index_posts_on_forum_id` ON posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mDROP INDEX `index_users_on_last_seen_at` ON users[0m
+  [4;35;1mSQL (0.016000)[0m   [0mDROP INDEX `index_moderatorships_on_forum_id` ON moderatorships[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE INDEX `index_posts_on_topic_id` ON posts (`topic_id`, `created_at`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 42[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to UpdateWhiteList (42)
+  [4;35;1mSQL (0.016000)[0m   [0mUPDATE schema_info SET version = 41[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to AddPostsBodyHtml (41)
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE posts DROP `body_html`[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE users DROP `bio_html`[0m
+  [4;35;1mSQL (0.015000)[0m   [0mALTER TABLE forums DROP `description_html`[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 40[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to FixLastPosts (40)
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 39[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to RemoveUnusedUserProfile (39)
+  [4;36;1mSQL (0.016000)[0m   [0;1mALTER TABLE users ADD `aim` varchar(255)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users ADD `yahoo` varchar(255)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE users ADD `google_talk` varchar(255)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users ADD `msn` varchar(255)[0m
+  [4;36;1mSQL (0.016000)[0m   [0;1mALTER TABLE users DROP `bio`[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 38[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to AddExceptionTable (38)
+  [4;35;1mSQL (0.000000)[0m   [0mDROP TABLE logged_exceptions[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 37[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to DeleteEmptyTopics (37)
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 36[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to TopicsCacheLastRepliedUser (36)
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE topics DROP `replied_by`[0m
+  [4;35;1mSQL (0.016000)[0m   [0mALTER TABLE topics DROP `last_post_id`[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 35[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to NeededIndexes (35)
+  [4;36;1mSQL (0.000000)[0m   [0;1mDROP INDEX `index_posts_on_user_id` ON posts[0m
+  [4;35;1mSQL (0.015000)[0m   [0mDROP INDEX `index_posts_on_topic_id` ON posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mDROP INDEX `index_topics_on_forum_id` ON topics[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 34[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to CreateMonitorships (34)
+  [4;35;1mSQL (0.000000)[0m   [0mDROP TABLE monitorships[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 33[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to AddPasswordHash (33)
+  [4;36;1mSQL (0.000000)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE TABLE schema_info (version int(11))[0m
+  [4;36;1mSQL (0.015000)[0m   [0;1mINSERT INTO schema_info (version) VALUES(0)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: Table 'schema_info' already exists: CREATE TABLE schema_info (version int(11))[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to CreateUsers (1)
+  [4;35;1mSQL (0.016000)[0m   [0mCREATE TABLE users (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `login` varchar(255) DEFAULT NULL, `email` varchar(255) DEFAULT NULL, `password` varchar(255) DEFAULT NULL, `created_at` datetime DEFAULT NULL, `last_login_at` datetime DEFAULT NULL, `admin` tinyint(1) DEFAULT NULL, `posts_count` int(11) DEFAULT 0) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 1[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to CreateForums (2)
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE TABLE forums (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255) DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 2[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to CreatePosts (3)
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE TABLE posts (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `forum_id` int(11) DEFAULT NULL, `user_id` int(11) DEFAULT NULL, `post_id` int(11) DEFAULT NULL, `title` varchar(255) DEFAULT NULL, `body` text DEFAULT NULL, `created_at` datetime DEFAULT NULL, `updated_at` datetime DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 3[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to RenamePostToTopic (4)
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW COLUMNS FROM posts LIKE 'post_id'[0m
+  [4;35;1mSQL (0.015000)[0m   [0mALTER TABLE posts CHANGE post_id topic_id int(11)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 4[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to AddForumDesc (5)
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE forums ADD `description` varchar(255)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 5[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to AddHits (6)
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE posts ADD `hits` int(11) DEFAULT 0[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 6[0m
+  [4;35;1mSQL (0.016000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to Sticky (7)
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE posts ADD `sticky` tinyint(1) DEFAULT 0[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 7[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to AddCounterCaches (8)
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users ADD `topics_count` int(11) DEFAULT 0[0m
+  [4;36;1mSQL (0.015000)[0m   [0;1mALTER TABLE forums ADD `topics_count` int(11) DEFAULT 0[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE forums ADD `posts_count` int(11) DEFAULT 0[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE posts ADD `posts_count` int(11) DEFAULT 0[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 8[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to LastSeenAt (9)
+  [4;35;1mSQL (0.016000)[0m   [0mALTER TABLE users ADD `last_seen_at` datetime[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 9[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to AddSessions (10)
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE TABLE sessions (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `session_id` varchar(255) DEFAULT NULL, `data` text DEFAULT NULL, `updated_at` datetime DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE INDEX `index_sessions_on_session_id` ON sessions (`session_id`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 10[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to ResetCounterCache (11)
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums [0m
+  [4;35;1mPost Load (0.000000)[0m   [0mSELECT * FROM posts [0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 11[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to DisplayName (12)
+  [4;35;1mSQL (0.016000)[0m   [0mALTER TABLE users ADD `display_name` varchar(255)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 12[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to UserUpdatedAt (13)
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE users ADD `updated_at` datetime[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 13[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to SetLastSeenAt (14)
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 14[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to AddTopicLastPostedAtDate (15)
+  [4;36;1mSQL (0.016000)[0m   [0;1mALTER TABLE posts ADD `replied_at` datetime[0m
+  [4;35;1mAddTopicLastPostedAtDate::Post Update (0.000000)[0m   [0mUPDATE posts SET replied_at = updated_at WHERE (topic_id = id) [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 15[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to EmpowerSessions (16)
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE sessions ADD `user_id` int(11)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 16[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to UpdateUserPostCounts (17)
+  [4;35;1mSQL (0.015000)[0m   [0mALTER TABLE users DROP `topics_count`[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 17[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to AddContactFields (18)
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users ADD `aim` varchar(255)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE users ADD `yahoo` varchar(255)[0m
+  [4;35;1mSQL (0.016000)[0m   [0mALTER TABLE users ADD `google_talk` varchar(255)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE users ADD `msn` varchar(255)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users ADD `website` varchar(255)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 18[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to PositionForForums (19)
+  [4;36;1mSQL (0.015000)[0m   [0;1mALTER TABLE forums ADD `position` int(11)[0m
+  [4;35;1mSQL (0.016000)[0m   [0mUPDATE schema_info SET version = 19[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to FixRepliedAt (20)
+  [4;35;1mSQL (0.000000)[0m   [0mupdate posts set replied_at=created_at where replied_at is null and id=topic_id[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 20[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to LogEveryoneOut (21)
+  [4;36;1mCGI::Session::ActiveRecordStore::Session Delete all (0.000000)[0m   [0;1mDELETE FROM sessions [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 21[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to CreateTopics (22)
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE TABLE topics (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `forum_id` int(11) DEFAULT NULL, `user_id` int(11) DEFAULT NULL, `title` varchar(255) DEFAULT NULL, `created_at` datetime DEFAULT NULL, `updated_at` datetime DEFAULT NULL, `hits` int(11) DEFAULT 0, `sticky` tinyint(1) DEFAULT 0, `posts_count` int(11) DEFAULT 0, `replied_at` datetime DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;36;1mCreateTopics::Post Load (0.000000)[0m   [0;1mSELECT * FROM posts WHERE (id=topic_id) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 22[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to CleanUpPostsTable (23)
+  [4;35;1mSQL (0.031000)[0m   [0mALTER TABLE posts DROP `title`[0m
+  [4;36;1mSQL (0.016000)[0m   [0;1mALTER TABLE posts DROP `hits`[0m
+  [4;35;1mSQL (0.031000)[0m   [0mALTER TABLE posts DROP `sticky`[0m
+  [4;36;1mSQL (0.016000)[0m   [0;1mALTER TABLE posts DROP `posts_count`[0m
+  [4;35;1mSQL (0.015000)[0m   [0mALTER TABLE posts DROP `replied_at`[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 23[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to LoginByKeyFields (24)
+  [4;36;1mSQL (0.032000)[0m   [0;1mALTER TABLE users ADD `login_key` varchar(255)[0m
+  [4;35;1mSQL (0.015000)[0m   [0mALTER TABLE users ADD `login_key_expires_at` datetime[0m
+  [4;36;1mSQL (0.016000)[0m   [0;1mUPDATE schema_info SET version = 24[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to RemoveUnnecessaryPostForumId (25)
+  [4;36;1mSQL (0.047000)[0m   [0;1mALTER TABLE posts DROP `forum_id`[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 25[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to ChangeStickyToInteger (26)
+  [4;35;1mChangeStickyToInteger::Topic Columns (0.015000)[0m   [0mSHOW FIELDS FROM topics[0m
+  [4;36;1mChangeStickyToInteger::Topic Load (0.000000)[0m   [0;1mSELECT * FROM topics WHERE (topics.`sticky` = 1) [0m
+  [4;35;1mSQL (0.016000)[0m   [0mALTER TABLE topics CHANGE sticky sticky int(11) DEFAULT 0[0m
+  [4;36;1mChangeStickyToInteger::Topic Update (0.000000)[0m   [0;1mUPDATE topics SET sticky=1 WHERE (id in (NULL)) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 26[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to ReAddPostsForumId (27)
+  [4;35;1mSQL (0.031000)[0m   [0mALTER TABLE posts ADD `forum_id` int(11)[0m
+  [4;36;1mReAddPostsForumId::Topic Load (0.000000)[0m   [0;1mSELECT id, forum_id FROM topics [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 27[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to FixForumPostsCount (28)
+  [4;35;1mFixForumPostsCount::Post Columns (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all, forum_id AS forum_id FROM posts GROUP BY forum_id [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 28[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to CreateModeratorships (29)
+  [4;35;1mSQL (0.016000)[0m   [0mCREATE TABLE moderatorships (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `forum_id` int(11) DEFAULT NULL, `user_id` int(11) DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 29[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to SetUserDisplayName (30)
+  [4;36;1mSetUserDisplayName::User Load (0.000000)[0m   [0;1mSELECT id, login, display_name FROM users [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 30[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to TopicLocked (31)
+  [4;35;1mSQL (0.016000)[0m   [0mALTER TABLE topics ADD `locked` tinyint(1) DEFAULT 0[0m
+  [4;36;1mTopic Update (0.000000)[0m   [0;1mUPDATE topics SET locked= 0 [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 31[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to AddActivatedBoolean (32)
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users ADD `activated` tinyint(1) DEFAULT 0[0m
+  [4;36;1mAddActivatedBoolean::User Update (0.000000)[0m   [0;1mUPDATE users SET activated = 1 [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 32[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to AddPasswordHash (33)
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW COLUMNS FROM users LIKE 'password'[0m
+  [4;36;1mSQL (0.015000)[0m   [0;1mALTER TABLE users CHANGE password password_hash varchar(255)[0m
+  [4;35;1mAddPasswordHash::User Load (0.000000)[0m   [0mSELECT id, password_hash FROM users [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 33[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to CreateMonitorships (34)
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE TABLE monitorships (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `topic_id` int(11) DEFAULT NULL, `user_id` int(11) DEFAULT NULL, `active` tinyint(1) DEFAULT 1) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 34[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to NeededIndexes (35)
+  [4;35;1mSQL (0.016000)[0m   [0mCREATE INDEX `index_posts_on_user_id` ON posts (`user_id`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE INDEX `index_posts_on_topic_id` ON posts (`topic_id`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE INDEX `index_topics_on_forum_id` ON topics (`forum_id`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 35[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to TopicsCacheLastRepliedUser (36)
+  [4;36;1mSQL (0.016000)[0m   [0;1mALTER TABLE topics ADD `replied_by` int(11)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE topics ADD `last_post_id` int(11)[0m
+  [4;36;1mTopicsCacheLastRepliedUser::Topic Load (0.000000)[0m   [0;1mSELECT * FROM topics [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 36[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to DeleteEmptyTopics (37)
+  [4;35;1mDeleteEmptyTopics::Topic Load (0.000000)[0m   [0mSELECT * FROM topics [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 37[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to AddExceptionTable (38)
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: Unknown table 'logged_exceptions': DROP TABLE logged_exceptions[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE TABLE logged_exceptions (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `exception_class` varchar(255) DEFAULT NULL, `controller_name` varchar(255) DEFAULT NULL, `action_name` varchar(255) DEFAULT NULL, `message` varchar(255) DEFAULT NULL, `backtrace` text DEFAULT NULL, `environment` text DEFAULT NULL, `request` text DEFAULT NULL, `created_at` datetime DEFAULT NULL) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.015000)[0m   [0;1mUPDATE schema_info SET version = 38[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to RemoveUnusedUserProfile (39)
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE users DROP `aim`[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users DROP `yahoo`[0m
+  [4;36;1mSQL (0.016000)[0m   [0;1mALTER TABLE users DROP `google_talk`[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users DROP `msn`[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE users ADD `bio` varchar(255)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 39[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to FixLastPosts (40)
+  [4;35;1mFixLastPosts::Topic Columns (0.015000)[0m   [0mSHOW FIELDS FROM topics[0m
+  [4;36;1mFixLastPosts::Post Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM posts[0m
+  [4;35;1mFixLastPosts::Topic Load Including Associations (0.000000)[0m   [0mSELECT topics.`id` AS t0_r0, topics.`forum_id` AS t0_r1, topics.`user_id` AS t0_r2, topics.`title` AS t0_r3, topics.`created_at` AS t0_r4, topics.`updated_at` AS t0_r5, topics.`hits` AS t0_r6, topics.`sticky` AS t0_r7, topics.`posts_count` AS t0_r8, topics.`replied_at` AS t0_r9, topics.`locked` AS t0_r10, topics.`replied_by` AS t0_r11, topics.`last_post_id` AS t0_r12, posts.`id` AS t1_r0, posts.`user_id` AS t1_r1, posts.`topic_id` AS t1_r2, posts.`body` AS t1_r3, posts.`created_at` AS t1_r4, posts.`updated_at` AS t1_r5, posts.`forum_id` AS t1_r6 FROM topics LEFT OUTER JOIN posts ON posts.topic_id = topics.id [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 40[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to AddPostsBodyHtml (41)
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE posts ADD `body_html` text[0m
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users ADD `bio_html` text[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mALTER TABLE forums ADD `description_html` text[0m
+  [4;35;1mSQL (0.000000)[0m   [0mBEGIN[0m
+  [4;36;1mPost Load (0.000000)[0m   [0;1mSELECT * FROM posts [0m
+  [4;35;1mSQL (0.000000)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mBEGIN[0m
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000000)[0m   [0mBEGIN[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users [0m
+  [4;35;1mSQL (0.000000)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 41[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to UpdateWhiteList (42)
+  [4;36;1mSQL (0.000000)[0m   [0;1mBEGIN[0m
+  [4;35;1mPost Load (0.000000)[0m   [0mSELECT * FROM posts [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000000)[0m   [0mBEGIN[0m
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums [0m
+  [4;35;1mSQL (0.000000)[0m   [0mCOMMIT[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mBEGIN[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users [0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCOMMIT[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 42[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to IndexHappy (43)
+  [4;35;1mSQL (0.016000)[0m   [0mDROP INDEX `index_posts_on_topic_id` ON posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCREATE INDEX `index_posts_on_forum_id` ON posts (`forum_id`, `created_at`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE INDEX `index_users_on_last_seen_at` ON users (`last_seen_at`)[0m
+  [4;36;1mSQL (0.015000)[0m   [0;1mCREATE INDEX `index_moderatorships_on_forum_id` ON moderatorships (`forum_id`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 43[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to TopicIndex (44)
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE INDEX `index_topics_on_sticky_and_replied_at` ON topics (`sticky`, `replied_at`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 44[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to TweakForumIndex (45)
+  [4;36;1mSQL (0.016000)[0m   [0;1mDROP INDEX `index_topics_on_sticky_and_replied_at` ON topics[0m
+  [4;35;1mSQL (0.000000)[0m   [0mCREATE INDEX `index_topics_on_sticky_and_replied_at` ON topics (`forum_id`, `sticky`, `replied_at`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 45[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to AddPostsUsersIndex (46)
+  [4;36;1mSQL (0.000000)[0m   [0;1mDROP INDEX `index_posts_on_user_id` ON posts[0m
+  [4;35;1mSQL (0.016000)[0m   [0mCREATE INDEX `index_posts_on_user_id` ON posts (`user_id`, `created_at`)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 46[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to SetStickyToZero (47)
+  [4;36;1mSetStickyToZero::Topic Update (0.000000)[0m   [0;1mUPDATE topics SET sticky = 0 WHERE (sticky is null) [0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 47[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+Migrating to AddUserIdentityUrl (48)
+  [4;35;1mSQL (0.000000)[0m   [0mALTER TABLE users ADD `identity_url` varchar(255)[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mUPDATE schema_info SET version = 48[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+Migrating to RecentTopicsIndex (49)
+  [4;36;1mSQL (0.031000)[0m   [0;1mCREATE INDEX `index_topics_on_forum_id_and_replied_at` ON topics (`forum_id`, `replied_at`)[0m
+  [4;35;1mSQL (0.000000)[0m   [0mUPDATE schema_info SET version = 49[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM forums[0m
+  [4;35;1mSQL (0.015000)[0m   [0mSHOW KEYS FROM forums[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM logged_exceptions[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM logged_exceptions[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM moderatorships[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM moderatorships[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM monitorships[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM monitorships[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM posts[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM sessions[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM sessions[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM topics[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM topics[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM users[0m
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-04-09 17:00:50) [GET]
+  Session ID: bfe461e3a2a0e176f3d6320c04866212
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums ORDER BY position[0m
+Rendering layoutfalsecontent_typetext/htmlactionindex within layouts/application
+Rendering forums/index
+  [4;35;1mTopic Columns (0.000000)[0m   [0mSHOW FIELDS FROM topics[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM topics [0m
+  [4;35;1mPost Columns (0.000000)[0m   [0mSHOW FIELDS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM posts [0m
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM users WHERE (posts_count>0) [0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (last_seen_at > '2007-04-09 21:55:50') [0m
+Completed in 0.07800 (12 reqs/sec) | Rendering: 0.06200 (79%) | DB: 0.01600 (20%) | 200 OK [http://127.0.0.1/]
+
+
+Processing LoggedExceptionsController#index (for 127.0.0.1 at 2007-04-09 17:01:49) [GET]
+  Session ID: bfe461e3a2a0e176f3d6320c04866212
+  Parameters: {"action"=>"index", "controller"=>"logged_exceptions"}
+Redirected to http://127.0.0.1:3001/login
+Completed in 0.00010 (10000 reqs/sec) | DB: 0.00000 (0%) | 302 Found [http://127.0.0.1/logged_exceptions]
+SessionController: missing default helper path session_helper
+
+
+Processing SessionController#new (for 127.0.0.1 at 2007-04-09 17:01:49) [GET]
+  Session ID: bfe461e3a2a0e176f3d6320c04866212
+  Parameters: {"action"=>"new", "controller"=>"session"}
+Rendering  within layouts/application
+Rendering session/new
+Completed in 0.01600 (62 reqs/sec) | Rendering: 0.01600 (100%) | DB: 0.00000 (0%) | 200 OK [http://127.0.0.1/login]
+SessionController: missing default helper path session_helper
+
+
+Processing SessionController#create (for 127.0.0.1 at 2007-04-09 17:01:52) [POST]
+  Session ID: bfe461e3a2a0e176f3d6320c04866212
+  Parameters: {"commit"=>"Login", "action"=>"create", "method"=>:get, "controller"=>"session", "login"=>"enrico", "password"=>"ingenius", "remember_me"=>"1"}
+  [4;36;1mUser Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (users.`activated` = 1 AND users.`password_hash` = '9c99f3b171e0e8076c3fbaaeaa3f11a6cb501aa7' AND users.`login` = 'enrico') LIMIT 1[0m
+Rendering layoutfalseactionnew within layouts/application
+Rendering session/new
+Completed in 0.03100 (32 reqs/sec) | Rendering: 0.01500 (48%) | DB: 0.00000 (0%) | 200 OK [http://127.0.0.1/session]
+
+
+Processing UsersController#new (for 127.0.0.1 at 2007-04-09 17:01:58) [GET]
+  Session ID: bfe461e3a2a0e176f3d6320c04866212
+  Parameters: {"action"=>"new", "controller"=>"users"}
+  [4;36;1mUser Columns (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+Rendering  within layouts/application
+Rendering users/new
+Rendered users/_form (0.01600)
+Completed in 0.03100 (32 reqs/sec) | Rendering: 0.01600 (51%) | DB: 0.00000 (0%) | 200 OK [http://127.0.0.1/signup]
+
+
+Processing UsersController#create (for 127.0.0.1 at 2007-04-09 17:02:14) [POST]
+  Session ID: bfe461e3a2a0e176f3d6320c04866212
+  Parameters: {"user"=>{"password_confirmation"=>"ingenius", "identity_url"=>"", "display_name"=>"", "login"=>"enrico", "password"=>"ingenius", "email"=>"enrico@enrico.com"}, "commit"=>"Sign up!", "action"=>"create", "controller"=>"users"}
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mBEGIN[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (LOWER(users.display_name) = 'enrico') LIMIT 1[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (LOWER(users.login) = 'enrico') LIMIT 1[0m
+  [4;35;1mUser Load (0.000000)[0m   [0mSELECT * FROM users WHERE (LOWER(users.email) = 'enrico@enrico.com') LIMIT 1[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT count(*) AS count_all FROM users [0m
+  [4;35;1mSQL (0.000000)[0m   [0mINSERT INTO users (`last_login_at`, `updated_at`, `bio_html`, `login_key`, `login_key_expires_at`, `last_seen_at`, `admin`, `website`, `activated`, `identity_url`, `password_hash`, `posts_count`, `bio`, `display_name`, `login`, `created_at`, `email`) VALUES(NULL, '2007-04-09 22:02:14', '', 'f20afa521540f353fa644fa1f2612f6f82efd35f', '2008-04-09 04:02:14', NULL, 1, NULL, 1, NULL, '9c99f3b171e0e8076c3fbaaeaa3f11a6cb501aa7', 0, NULL, 'enrico', 'enrico', '2007-04-09 22:02:14', 'enrico@enrico.com')[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mCOMMIT[0m
+Sent mail:
+ Date: Mon, 9 Apr 2007 17:02:14 -0500
+From: 3001
+To: enrico@enrico.com
+Subject: Welcome to Beast
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+
+Welcome to Beast, enrico!
+
+Please visit the link below to activate your account.
+
+http://127.0.0.1:3001/activate/f20afa521540f353fa644fa1f2612f6f82efd35f
+Redirected to http://127.0.0.1:3001/login
+Completed in 0.95300 (1 reqs/sec) | DB: 0.00000 (0%) | 302 Found [http://127.0.0.1/users]
+SessionController: missing default helper path session_helper
+
+
+Processing SessionController#new (for 127.0.0.1 at 2007-04-09 17:02:15) [GET]
+  Session ID: bfe461e3a2a0e176f3d6320c04866212
+  Parameters: {"action"=>"new", "controller"=>"session"}
+Rendering  within layouts/application
+Rendering session/new
+Completed in 0.00010 (10000 reqs/sec) | Rendering: 0.00000 (0%) | DB: 0.00000 (0%) | 200 OK [http://127.0.0.1/login]
+
+
+Processing UsersController#activate (for 127.0.0.1 at 2007-04-09 17:02:52) [GET]
+  Session ID: bfe461e3a2a0e176f3d6320c04866212
+  Parameters: {"action"=>"activate", "controller"=>"users", "key"=>"f20afa521540f353fa644fa1f2612f6f82efd35f"}
+  [4;35;1mUser Columns (0.000000)[0m   [0mSHOW FIELDS FROM users[0m
+  [4;36;1mUser Load (0.000000)[0m   [0;1mSELECT * FROM users WHERE (users.`login_key` = 'f20afa521540f353fa644fa1f2612f6f82efd35f') LIMIT 1[0m
+  [4;35;1mUser Update (0.016000)[0m   [0mUPDATE users SET last_seen_at = '2007-04-09 22:02:52' WHERE (id = 1) [0m
+Redirected to http://127.0.0.1:3001/
+Completed in 0.03100 (32 reqs/sec) | DB: 0.01600 (51%) | 302 Found [http://127.0.0.1/activate/f20afa521540f353fa644fa1f2612f6f82efd35f]
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-04-09 17:02:53) [GET]
+  Session ID: bfe461e3a2a0e176f3d6320c04866212
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;36;1mForum Load (0.000000)[0m   [0;1mSELECT * FROM forums ORDER BY position[0m
+Rendering layoutfalsecontent_typetext/htmlactionindex within layouts/application
+Rendering forums/index
+
+
+ActionView::TemplateError (C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:237:in `load_missing_constant': A copy of AuthenticationSystem has been removed from the module tree but is still active!) on line #9 of app/views/forums/index.rhtml:
+6:   <%= _('A small, light-weight forum in Rails with a scary name and a goal of around 500 lines of code when we\'re done.') %>
+7: </p>
+8: 
+9: <% if admin? %>
+10: <h6><%= _('Admin') %></h6>
+11: <p><%= link_to _('Create New Forum'), new_forum_path, :class => "utility" %></p>
+12: <% end %>
+
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/helpers/capture_helper.rb:93:in `content_for'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:452:in `const_missing'
+    #{RAILS_ROOT}/lib/authentication_system.rb:59:in `current_user'
+    #{RAILS_ROOT}/lib/authentication_system.rb:63:in `logged_in?'
+    #{RAILS_ROOT}/lib/authentication_system.rb:67:in `admin?'
+    (eval):2:in `send'
+    (eval):2:in `admin?'
+    #{RAILS_ROOT}/app/views/forums/index.rhtml:9:in `_run_rhtml_47app47views47forums47index46rhtml'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/helpers/capture_helper.rb:108:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/helpers/capture_helper.rb:108:in `capture_erb_with_buffer'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/helpers/capture_helper.rb:67:in `capture'
+    (eval):1:in `content_for'
+    #{RAILS_ROOT}/app/views/forums/index.rhtml:1:in `eval'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/helpers/capture_helper.rb:93:in `content_for'
+    #{RAILS_ROOT}/app/views/forums/index.rhtml:1:in `_run_rhtml_47app47views47forums47index46rhtml'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/base.rb:326:in `send'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/base.rb:326:in `compile_and_render_template'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/base.rb:301:in `render_template'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/base.rb:260:in `render_file'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:806:in `render_file'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:738:in `render_with_no_layout'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:863:in `render_without_layout'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:798:in `render_action'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:748:in `render_with_no_layout'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/deprecation.rb:44:in `silence'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:747:in `render_with_no_layout'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/layout.rb:244:in `render_without_benchmark'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/benchmarking.rb:50:in `render'
+    C:/ruby/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/benchmarking.rb:50:in `render'
+    #{RAILS_ROOT}/app/controllers/forums_controller.rb:7:in `index'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/mime_responds.rb:167:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/mime_responds.rb:167:in `respond'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/mime_responds.rb:161:in `each'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/mime_responds.rb:161:in `respond'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/mime_responds.rb:105:in `respond_to'
+    #{RAILS_ROOT}/app/controllers/forums_controller.rb:7:in `index'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:1095:in `send'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:1095:in `perform_action_without_filters'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:632:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:634:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:638:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:438:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:637:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:638:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:438:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:637:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:638:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:449:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:637:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:638:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:449:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:637:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:619:in `perform_action_without_benchmark'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/benchmarking.rb:66:in `perform_action_without_rescue'
+    C:/ruby/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/benchmarking.rb:66:in `perform_action_without_rescue'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/rescue.rb:83:in `perform_action'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:430:in `send'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:430:in `process_without_filters'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:624:in `process_without_session_management_support'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/session_management.rb:114:in `process'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:330:in `process'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/dispatcher.rb:41:in `dispatch'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/webrick_server.rb:113:in `handle_dispatch'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/webrick_server.rb:79:in `service'
+    C:/ruby/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    C:/ruby/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `each'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/webrick_server.rb:63:in `dispatch'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/commands/servers/webrick.rb:59
+    C:/ruby/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `gem_original_require'
+    C:/ruby/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:495:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:342:in `new_constants_in'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:495:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/commands/server.rb:39
+    C:/ruby/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `gem_original_require'
+    C:/ruby/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:495:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:342:in `new_constants_in'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:495:in `require'
+    script/server:3
+    -e:4:in `load'
+    -e:4
+
+
+Rendering C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+
+
+Processing ForumsController#index (for 127.0.0.1 at 2007-04-09 21:30:20) [GET]
+  Session ID: bfe461e3a2a0e176f3d6320c04866212
+  Parameters: {"action"=>"index", "controller"=>"forums"}
+  [4;35;1mForum Load (0.000000)[0m   [0mSELECT * FROM forums ORDER BY position[0m
+Rendering layoutfalsecontent_typetext/htmlactionindex within layouts/application
+Rendering forums/index
+
+
+ActionView::TemplateError (C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:237:in `load_missing_constant': A copy of AuthenticationSystem has been removed from the module tree but is still active!) on line #9 of app/views/forums/index.rhtml:
+6:   <%= _('A small, light-weight forum in Rails with a scary name and a goal of around 500 lines of code when we\'re done.') %>
+7: </p>
+8: 
+9: <% if admin? %>
+10: <h6><%= _('Admin') %></h6>
+11: <p><%= link_to _('Create New Forum'), new_forum_path, :class => "utility" %></p>
+12: <% end %>
+
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/helpers/capture_helper.rb:93:in `content_for'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:452:in `const_missing'
+    #{RAILS_ROOT}/lib/authentication_system.rb:59:in `current_user'
+    #{RAILS_ROOT}/lib/authentication_system.rb:63:in `logged_in?'
+    #{RAILS_ROOT}/lib/authentication_system.rb:67:in `admin?'
+    (eval):2:in `send'
+    (eval):2:in `admin?'
+    #{RAILS_ROOT}/app/views/forums/index.rhtml:9:in `_run_rhtml_47app47views47forums47index46rhtml'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/helpers/capture_helper.rb:108:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/helpers/capture_helper.rb:108:in `capture_erb_with_buffer'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/helpers/capture_helper.rb:67:in `capture'
+    (eval):1:in `content_for'
+    #{RAILS_ROOT}/app/views/forums/index.rhtml:1:in `eval'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/helpers/capture_helper.rb:93:in `content_for'
+    #{RAILS_ROOT}/app/views/forums/index.rhtml:1:in `_run_rhtml_47app47views47forums47index46rhtml'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/base.rb:326:in `send'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/base.rb:326:in `compile_and_render_template'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/base.rb:301:in `render_template'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_view/base.rb:260:in `render_file'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:806:in `render_file'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:738:in `render_with_no_layout'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:863:in `render_without_layout'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:798:in `render_action'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:748:in `render_with_no_layout'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/deprecation.rb:44:in `silence'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:747:in `render_with_no_layout'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/layout.rb:244:in `render_without_benchmark'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/benchmarking.rb:50:in `render'
+    C:/ruby/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/benchmarking.rb:50:in `render'
+    #{RAILS_ROOT}/app/controllers/forums_controller.rb:7:in `index'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/mime_responds.rb:167:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/mime_responds.rb:167:in `respond'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/mime_responds.rb:161:in `each'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/mime_responds.rb:161:in `respond'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/mime_responds.rb:105:in `respond_to'
+    #{RAILS_ROOT}/app/controllers/forums_controller.rb:7:in `index'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:1095:in `send'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:1095:in `perform_action_without_filters'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:632:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:634:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:638:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:438:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:637:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:638:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:438:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:637:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:638:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:449:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:637:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:638:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:449:in `call'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:637:in `call_filter'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:619:in `perform_action_without_benchmark'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/benchmarking.rb:66:in `perform_action_without_rescue'
+    C:/ruby/lib/ruby/1.8/benchmark.rb:293:in `measure'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/benchmarking.rb:66:in `perform_action_without_rescue'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/rescue.rb:83:in `perform_action'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:430:in `send'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:430:in `process_without_filters'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/filters.rb:624:in `process_without_session_management_support'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/session_management.rb:114:in `process'
+    C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/base.rb:330:in `process'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/dispatcher.rb:41:in `dispatch'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/webrick_server.rb:113:in `handle_dispatch'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/webrick_server.rb:79:in `service'
+    C:/ruby/lib/ruby/1.8/webrick/httpserver.rb:104:in `service'
+    C:/ruby/lib/ruby/1.8/webrick/httpserver.rb:65:in `run'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:173:in `start_thread'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:162:in `start_thread'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:95:in `start'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `each'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:92:in `start'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:23:in `start'
+    C:/ruby/lib/ruby/1.8/webrick/server.rb:82:in `start'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/webrick_server.rb:63:in `dispatch'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/commands/servers/webrick.rb:59
+    C:/ruby/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `gem_original_require'
+    C:/ruby/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:495:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:342:in `new_constants_in'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:495:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/rails-1.2.3/lib/commands/server.rb:39
+    C:/ruby/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `gem_original_require'
+    C:/ruby/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:27:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:495:in `require'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:342:in `new_constants_in'
+    C:/ruby/lib/ruby/gems/1.8/gems/activesupport-1.4.2/lib/active_support/dependencies.rb:495:in `require'
+    script/server:3
+    -e:4:in `load'
+    -e:4
+
+
+Rendering C:/ruby/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib/action_controller/templates/rescues/layout.rhtml (500 Internal Error)
+  [4;36;1mSQL (0.000000)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: Table 'schema_info' already exists: CREATE TABLE schema_info (version int(11))[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: Table 'schema_info' already exists: CREATE TABLE schema_info (version int(11))[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSELECT version FROM schema_info[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT * FROM schema_info[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM forums[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM forums[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM logged_exceptions[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM logged_exceptions[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM moderatorships[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM moderatorships[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM monitorships[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM monitorships[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM posts[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM posts[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM sessions[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM sessions[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM topics[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM topics[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSHOW FIELDS FROM users[0m
+  [4;35;1mSQL (0.000000)[0m   [0mSHOW KEYS FROM users[0m

@@ -1,0 +1,13 @@
+# Logfile created on Thu Apr 12 05:53:45 -0500 2007 by logger.rb/1.5.2.9
+  [4;36;1mSQL (0.000000)[0m   [0;1mMysql::Error: Table 'schema_info' already exists: CREATE TABLE schema_info (version int(11))[0m
+  [4;35;1mSQL (0.000000)[0m   [0mMysql::Error: Table 'schema_info' already exists: CREATE TABLE schema_info (version int(11))[0m
+  [4;36;1mSQL (0.000000)[0m   [0;1mSELECT version FROM schema_info[0m
+  [4;35;1mAnalyzing 
+[0m   [0mselect_type | key_len | type | Extra | id | possible_keys | rows | table       | ref | key
+   ------------------------------------------------------------------------------------------
+   SIMPLE      |         | ALL  |       | 1  |               | 1    | schema_info |     |    
+[0m
+
+Redirected to http://www.clockingit.com
+Response body was encoded with gzip
+Completed in 0.06300 (15 reqs/sec) | DB: 0.04700 (74%) | 302 Found [http://127.0.0.1/]

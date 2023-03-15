@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="net.certiv.ntail"
+            name="NTail Log View"
+            parentCategory="org.eclipse.ui"/>
+      <view
+            allowMultiple="true"
+            category="net.certiv.ntail"
+            class="net.certiv.ntail.NTailView"
+            icon="icons/lw_icon.png"
+            id="net.certiv.ntail.NTailView"
+            name="NTail"
+            restorable="true"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="net.certiv.certivtools.prefs.TopLevelPage"
+            class="net.certiv.ntail.preferences.PrefsPageGeneral"
+            id="net.certiv.ntail.preferences.PrefsPage"
+            name="NTail">
+      </page>
+      <page
+            category="net.certiv.ntail.preferences.PrefsPage"
+            class="net.certiv.ntail.preferences.PrefsPageViewers"
+            id="net.certiv.ntail.preferences.PrefsPageWatchers"
+            name="Define Viewers"/>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer class="net.certiv.ntail.preferences.PrefsInitializer"/>
+   </extension>
+</plugin>
