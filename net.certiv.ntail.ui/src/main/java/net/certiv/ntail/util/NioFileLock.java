@@ -1,4 +1,4 @@
-package net.certiv.ntail.utils;
+package net.certiv.ntail.util;
 
 import java.io.*;
 import java.nio.channels.FileLock;

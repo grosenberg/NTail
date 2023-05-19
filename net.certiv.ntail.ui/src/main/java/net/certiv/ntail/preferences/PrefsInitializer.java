@@ -1,6 +1,5 @@
 package net.certiv.ntail.preferences;
 
-import net.certiv.ntail.Key;
 import net.certiv.ntail.NTailPlugin;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;

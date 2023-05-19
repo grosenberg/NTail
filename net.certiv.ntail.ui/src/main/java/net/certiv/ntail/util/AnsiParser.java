@@ -1,9 +1,7 @@
-package net.certiv.ntail.utils;
+package net.certiv.ntail.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.certiv.ntail.NTailPlugin;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
@@ -11,77 +9,78 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
+import net.certiv.ntail.util.log.Log;
+
 /**
  * @author Gerald B. Rosenberg
  */
 public class AnsiParser {
 
 	/**
-	 * The control sequence introducer (CSI) is the two-character sequence: escape
-	 * open-bracket; or, in unicode, the single character "\u009B", same as hex 9b. The
-	 * escape character can be specified as "\u001B" in Java. The control sequence end
-	 * (CSE) for graphic rendition codes is the lower-case letter "m". <br>
+	 * The control sequence introducer (CSI) is the two-character sequence: escape open-bracket; or,
+	 * in unicode, the single character "\u009B", same as hex 9b. The escape character can be
+	 * specified as "\u001B" in Java. The control sequence end (CSE) for graphic rendition codes is
+	 * the lower-case letter "m". <br>
 	 * <br>
 	 * CSI [n [;k]] CSE <br>
-	 * Sets SGR (Select Graphic Rendition) parameters. After CSI can be zero or more
-	 * parameters separated with ;. With no parameters, CSI CSE is treated as CSI 0 CSE
-	 * (reset / normal), which is typical of most of the ANSI codes. <br>
+	 * Sets SGR (Select Graphic Rendition) parameters. After CSI can be zero or more parameters
+	 * separated with ;. With no parameters, CSI CSE is treated as CSI 0 CSE (reset / normal), which
+	 * is typical of most of the ANSI codes. <br>
 	 * <br>
-	 * SGR parameters: graphics functions are specified by the following values and remain
-	 * active until the next SGR control sequence.
-	 * 
+	 * SGR parameters: graphics functions are specified by the following values and remain active
+	 * until the next SGR control sequence.
+	 *
 	 * <pre>
-	 * Text attributes 
-	 * 	 0    All attributes off 
-	 * 	 1    Bold on 
+	 * Text attributes
+	 * 	 0    All attributes off
+	 * 	 1    Bold on
 	 * 	 3    Italic on
-	 * 	 4    Underline single 
-	 * 	 5    Blink on 
-	 * 	 7    Reverse video on 
-	 * 	 8    Concealed on 
+	 * 	 4    Underline single
+	 * 	 5    Blink on
+	 * 	 7    Reverse video on
+	 * 	 8    Concealed on
 	 * 	 9    Strikethrough on
 	 * 	 21   Underline double
-	 * 
-	 * Foreground colors 
-	 * 	 30   Black 
-	 * 	 31   Red 
-	 * 	 32   Green 
-	 * 	 33   Yellow 
-	 * 	 34   Blue 
-	 * 	 35   Magenta 
-	 * 	 36   Cyan 
-	 * 	 37   White 
-	 * 
+	 *
+	 * Foreground colors
+	 * 	 30   Black
+	 * 	 31   Red
+	 * 	 32   Green
+	 * 	 33   Yellow
+	 * 	 34   Blue
+	 * 	 35   Magenta
+	 * 	 36   Cyan
+	 * 	 37   White
+	 *
 	 * 	 90   Bright Black (dark grey)
-	 * 	 91   Bright Red 
-	 * 	 92   Bright Green 
-	 * 	 93   Bright Yellow 
-	 * 	 94   Bright Blue 
-	 * 	 95   Bright Magenta 
-	 * 	 96   Bright Cyan 
-	 * 	 97   Bright White 
-	 * 
-	 * Background colors 
-	 * 	 40   Black 
-	 * 	 41   Red 
-	 * 	 42   Green 
-	 * 	 43   Yellow 
-	 * 	 44   Blue 
-	 * 	 45   Magenta 
-	 * 	 46   Cyan 
-	 * 	 47   White 
-	 * 
+	 * 	 91   Bright Red
+	 * 	 92   Bright Green
+	 * 	 93   Bright Yellow
+	 * 	 94   Bright Blue
+	 * 	 95   Bright Magenta
+	 * 	 96   Bright Cyan
+	 * 	 97   Bright White
+	 *
+	 * Background colors
+	 * 	 40   Black
+	 * 	 41   Red
+	 * 	 42   Green
+	 * 	 43   Yellow
+	 * 	 44   Blue
+	 * 	 45   Magenta
+	 * 	 46   Cyan
+	 * 	 47   White
+	 *
 	 * 	 100  Bright Black (dark grey)
-	 * 	 101  Bright Red 
-	 * 	 102  Bright Green 
-	 * 	 103  Bright Yellow 
-	 * 	 104  Bright Blue 
-	 * 	 105  Bright Magenta 
-	 * 	 106  Bright Cyan 
+	 * 	 101  Bright Red
+	 * 	 102  Bright Green
+	 * 	 103  Bright Yellow
+	 * 	 104  Bright Blue
+	 * 	 105  Bright Magenta
+	 * 	 106  Bright Cyan
 	 * 	 107  Bright White
-	 * 
+	 *
 	 * Parameters 30 through 47 meet the ISO 6429 standard.
-	 * 	
 	 * </pre>
 	 */
 
@@ -100,9 +99,8 @@ public class AnsiParser {
 	private static final Pattern p = Pattern.compile(rx);
 
 	/**
-	 * Split a single line of the log text on each occurrence of a CSI. Process each
-	 * partial line.
-	 * 
+	 * Split a single line of the log text on each occurrence of a CSI. Process each partial line.
+	 *
 	 * @param styledText
 	 * @param text
 	 */
@@ -232,7 +230,7 @@ public class AnsiParser {
 				sr.background = WHITE;
 				break;
 			default:
-				NTailPlugin.getDefault().error("Unknown Ansi parameter [n=" + param + "]");
+				Log.error("Unknown Ansi parameter [%s]", param);
 		}
 		return sr;
 	}

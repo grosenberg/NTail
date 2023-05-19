@@ -5,7 +5,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.swt.custom.CTabItem;
 
 import net.certiv.ntail.NTailView;
-import net.certiv.ntail.utils.ImageUtils;
+import net.certiv.ntail.util.ImageUtils;
 import net.certiv.ntail.viewers.ViewerSetEntry;
 
 /**

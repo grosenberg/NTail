@@ -1,4 +1,4 @@
-package net.certiv.ntail;
+package net.certiv.ntail.preferences;
 
 /**
  * @author Gerald B. Rosenberg

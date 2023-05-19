@@ -3,8 +3,9 @@ package net.certiv.ntail.dialogs;
 import java.io.File;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import net.certiv.ntail.Key;
+
 import net.certiv.ntail.NTailPlugin;
+import net.certiv.ntail.preferences.Key;
 import net.certiv.ntail.viewers.Viewer;
 import net.certiv.ntail.viewers.ViewerSet;
 import org.eclipse.jface.dialogs.Dialog;

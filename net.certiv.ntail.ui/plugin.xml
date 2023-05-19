@@ -5,16 +5,14 @@
          point="org.eclipse.ui.views">
       <category
             id="net.certiv.ntail"
-            name="NTail Log View"
-            parentCategory="org.eclipse.ui"/>
+            name="Logging"/>
       <view
             allowMultiple="true"
             category="net.certiv.ntail"
             class="net.certiv.ntail.NTailView"
             icon="icons/lw_icon.png"
             id="net.certiv.ntail.NTailView"
-            name="NTail"
-            restorable="true"/>
+            name="NTail"/>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">

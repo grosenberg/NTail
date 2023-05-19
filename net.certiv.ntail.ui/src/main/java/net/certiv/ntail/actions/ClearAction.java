@@ -4,7 +4,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.text.Document;
 
 import net.certiv.ntail.NTailView;
-import net.certiv.ntail.utils.ImageUtils;
+import net.certiv.ntail.util.ImageUtils;
 import net.certiv.ntail.viewers.ViewerSetEntry;
 
 /**

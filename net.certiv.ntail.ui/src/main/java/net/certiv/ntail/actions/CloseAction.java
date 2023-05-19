@@ -2,7 +2,7 @@ package net.certiv.ntail.actions;
 
 import net.certiv.ntail.NTailPlugin;
 import net.certiv.ntail.NTailView;
-import net.certiv.ntail.utils.ImageUtils;
+import net.certiv.ntail.util.ImageUtils;
 
 import org.eclipse.jface.action.Action;
 

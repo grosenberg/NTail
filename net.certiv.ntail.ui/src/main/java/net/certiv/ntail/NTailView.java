@@ -62,9 +62,11 @@ import net.certiv.ntail.actions.OpenAction;
 import net.certiv.ntail.actions.ScrollAction;
 import net.certiv.ntail.actions.TruncateAction;
 import net.certiv.ntail.actions.TruncateAllAction;
+import net.certiv.ntail.preferences.Key;
 import net.certiv.ntail.preferences.Prefs;
-import net.certiv.ntail.utils.AnsiParser;
-import net.certiv.ntail.utils.BufferList;
+import net.certiv.ntail.util.AnsiParser;
+import net.certiv.ntail.util.BufferList;
+import net.certiv.ntail.util.log.Log;
 import net.certiv.ntail.viewers.Viewer;
 import net.certiv.ntail.viewers.ViewerSet;
 import net.certiv.ntail.viewers.ViewerSetEntry;
@@ -80,10 +82,10 @@ public class NTailView extends ViewPart {
 
 	/** List of the Viewer objects installed in this view instance. */
 	private ArrayList<ViewerSetEntry> localViewerList = new ArrayList<>();
+
 	/** Tab container for the view instance */
 	private CTabFolder viewFolder = null;
-	// private static final Pattern linkPattern = Pattern
-	// .compile("((?:\\w*\\.)+)\\w*(?:\\$\\d(?:\\.\\w*)?)?(?:\\()((\\w+)\\.\\w+)(?::)(\\d+)(?:\\))");
+
 	private static final Pattern linkPattern = Pattern.compile("((?:\\w*|\\.)+)\\.[A-Z].*\\((\\w+\\.\\w+):(\\d+)");
 	private static final String pathSeparator = FileSystems.getDefault().getSeparator();
 	private static final Cursor handCursor = new Cursor(null, SWT.CURSOR_HAND);
@@ -371,7 +373,7 @@ public class NTailView extends ViewPart {
 		for (IViewReference vref : refs) {
 			String partName = vref.getPartName();
 			for (String name : names) {
-				if (partName.equals(NTailPlugin.PLUGIN_ID + ":" + name)) {
+				if (partName.equals(Key.NAME + ":" + name)) {
 					retNames.remove(name);
 				}
 			}
@@ -390,7 +392,7 @@ public class NTailView extends ViewPart {
 	}
 
 	private void adjustTitles(String logName) {
-		StringBuilder title = new StringBuilder(NTailPlugin.PLUGIN_ID);
+		StringBuilder title = new StringBuilder(Key.NAME);
 		title.append(":").append(viewName);
 		if (logName != null && logName.length() > 0) {
 			// expand view title
@@ -464,13 +466,10 @@ public class NTailView extends ViewPart {
 				return entry;
 			}
 		}
-		NTailPlugin.getDefault().error("ViewerSetEntry not found");
+		Log.error("ViewerSetEntry not found");
 		return null;
 	}
 
-	/**
-	 * @param w
-	 */
 	private void addViewer(Viewer w) {
 		if (!validate(w)) return;
 
@@ -507,8 +506,7 @@ public class NTailView extends ViewPart {
 		try {
 			viewerTail = new ViewerTail(w);
 		} catch (Exception e) {
-			NTailPlugin.getDefault().error(
-					"Failed to create tail [viewName=" + w.getViewName() + ", fileName=" + w.getFileName() + "]", e);
+			Log.error(e, "Failed to create tail for %s [%s]", w.getViewName(), w.getFileName());
 			return;
 		}
 		final ViewerSetEntry entry = new ViewerSetEntry(viewer, viewerTail, viewTab, w);
@@ -616,7 +614,7 @@ public class NTailView extends ViewPart {
 			}
 			line = st.getText(beg, end);
 		} catch (IllegalArgumentException evt) {
-			NTailPlugin.getDefault().error("Clicked on nothing");
+			Log.error("Clicked on nothing");
 			evt.printStackTrace();
 			return;
 		}
@@ -634,7 +632,7 @@ public class NTailView extends ViewPart {
 				int fnum = Integer.parseInt(lnumb);
 				NTailPlugin.getDefault().getDocUtils().revealFile(fname, fnum);
 			} else {
-				NTailPlugin.getDefault().error("Reveal failed [line=" + line + "]");
+				Log.error("Reveal line failed [%s]", line);
 			}
 		}
 	}

@@ -20,14 +20,12 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-		<java.version>11</java.version>
-		<maven.compiler.source>${java.version}</maven.compiler.source>
-		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<jdk.version>11</jdk.version>
+		<maven.compiler.source>${jdk.version}</maven.compiler.source>
+		<maven.compiler.target>${jdk.version}</maven.compiler.target>
 		<tycho.version>3.0.1</tycho.version>
 
 		<eclipse.repo.url>http://download.eclipse.org/releases/latest</eclipse.repo.url>
-		<certiv.repo.url>file:/D:/DevFiles/Eclipse/Tools/Dsl/net.certiv.dsl/net.certiv.dsl.site/target/repository</certiv.repo.url>
 	</properties>
 
 	<repositories>
@@ -35,11 +33,6 @@
 			<id>eclipse</id>
 			<layout>p2</layout>
 			<url>${eclipse.repo.url}</url>
-		</repository>
-		<repository>
-			<id>certiv</id>
-			<layout>p2</layout>
-			<url>${certiv.repo.url}</url>
 		</repository>
 	</repositories>
 

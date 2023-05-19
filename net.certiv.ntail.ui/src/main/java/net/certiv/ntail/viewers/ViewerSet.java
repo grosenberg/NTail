@@ -9,23 +9,23 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import net.certiv.ntail.Key;
-import net.certiv.ntail.NTailPlugin;
+
 import org.eclipse.core.commands.common.EventManager;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.util.SafeRunnable;
 
+import net.certiv.ntail.NTailPlugin;
+import net.certiv.ntail.preferences.Key;
+import net.certiv.ntail.util.log.Level;
+import net.certiv.ntail.util.log.Log;
+
 /**
- * The ViewerSet is the central data structure for Viewer objects. Each Viewer is
- * associated with a named view.
- * 
- * @author Gerald B. Rosenberg
+ * The ViewerSet is the central data structure for Viewer objects. Each Viewer is associated with a
+ * named view.
  */
 public class ViewerSet extends EventManager {
-
-	private boolean debug = false;
 
 	private static File viewersFile;
 	private static ArrayList<Viewer> viewerList;
@@ -34,13 +34,13 @@ public class ViewerSet extends EventManager {
 	 * A singleton object held by NTailPlugin that represents the set of Viewer objects.
 	 */
 	public ViewerSet() {
-		super();
+		Log.setLevel(Level.DEBUG);
 		loadViewers();
 	}
 
 	public synchronized ArrayList<Viewer> getViewerList() {
 		if (viewerList == null) {
-			viewerList = new ArrayList<Viewer>();
+			viewerList = new ArrayList<>();
 		}
 		return viewerList;
 	}
@@ -64,7 +64,7 @@ public class ViewerSet extends EventManager {
 	}
 
 	public synchronized ArrayList<Viewer> getViewers(String viewName) {
-		ArrayList<Viewer> viewers = new ArrayList<Viewer>();
+		ArrayList<Viewer> viewers = new ArrayList<>();
 		for (Viewer w : getViewerList()) {
 			if (w.getViewName().equals(viewName)) {
 				viewers.add(w);
@@ -86,7 +86,7 @@ public class ViewerSet extends EventManager {
 	}
 
 	public ArrayList<String> getUniqueViewNames() {
-		ArrayList<String> aList = new ArrayList<String>();
+		ArrayList<String> aList = new ArrayList<>();
 		for (Viewer w : getViewerList()) {
 			if (!aList.contains(w.getViewName())) {
 				aList.add(w.getViewName());
@@ -96,7 +96,7 @@ public class ViewerSet extends EventManager {
 	}
 
 	public ArrayList<String> getUniqueLogFileNames() {
-		ArrayList<String> aList = new ArrayList<String>();
+		ArrayList<String> aList = new ArrayList<>();
 		for (Viewer w : getViewerList()) {
 			if (!aList.contains(w.getFileName())) {
 				aList.add(w.getFileName());
@@ -106,7 +106,7 @@ public class ViewerSet extends EventManager {
 	}
 
 	public ArrayList<String> getUniqueLines() {
-		ArrayList<String> aList = new ArrayList<String>();
+		ArrayList<String> aList = new ArrayList<>();
 		for (Viewer w : getViewerList()) {
 			if (!aList.contains(w.getLinesPattern())) {
 				aList.add(w.getLinesPattern());
@@ -116,7 +116,7 @@ public class ViewerSet extends EventManager {
 	}
 
 	public ArrayList<String> getUniqueReplace() {
-		ArrayList<String> aList = new ArrayList<String>();
+		ArrayList<String> aList = new ArrayList<>();
 		for (Viewer w : getViewerList()) {
 			if (!aList.contains(w.getReplacePattern())) {
 				aList.add(w.getReplacePattern());
@@ -126,7 +126,7 @@ public class ViewerSet extends EventManager {
 	}
 
 	public ArrayList<String> getUniqueRepWith() {
-		ArrayList<String> aList = new ArrayList<String>();
+		ArrayList<String> aList = new ArrayList<>();
 		for (Viewer w : getViewerList()) {
 			if (!aList.contains(w.getRepWithText())) {
 				aList.add(w.getRepWithText());
@@ -136,7 +136,7 @@ public class ViewerSet extends EventManager {
 	}
 
 	public ArrayList<String> getUniqueHighlights() {
-		ArrayList<String> aList = new ArrayList<String>();
+		ArrayList<String> aList = new ArrayList<>();
 		for (Viewer w : getViewerList()) {
 			if (!aList.contains(w.getHighlightPattern())) {
 				aList.add(w.getHighlightPattern());
@@ -146,24 +146,24 @@ public class ViewerSet extends EventManager {
 	}
 
 	/**
-	 * Loads the list of viewer objects. The in-core data structure is shared with all
-	 * view instances.
+	 * Loads the list of viewer objects. The in-core data structure is shared with all view
+	 * instances.
 	 */
 	public synchronized void loadViewers() {
-		if (debug) NTailPlugin.getDefault().debug("loadViewers()");
+		Log.debug("loadViewers()");
 		viewersFile = getViewersFile();
 		loadViewers(viewersFile);
 	}
 
 	@SuppressWarnings("unchecked")
 	public synchronized void loadViewers(File vFile) {
-		if (debug) NTailPlugin.getDefault().debug("loadViewers(vFile)");
+		Log.debug("loadViewers(vFile)");
 		XMLDecoder coder = null;
 		if (vFile.exists()) {
 			try {
 				coder = new XMLDecoder(new BufferedInputStream(new FileInputStream(vFile)));
 			} catch (FileNotFoundException e) {
-				NTailPlugin.getDefault().error("Error loading viewerList", e);
+				Log.error("Error loading viewerList", e);
 			}
 		}
 		if (coder != null) {
@@ -174,18 +174,18 @@ public class ViewerSet extends EventManager {
 			}
 			coder.close();
 			if (viewerList == null) {
-				viewerList = new ArrayList<Viewer>();
-				NTailPlugin.getDefault().error("Failed to read viewerlist; loading default");
+				viewerList = new ArrayList<>();
+				Log.error("Failed to read viewerlist; loading default");
 			} else if (viewerList.size() > 0 && viewerList.get(0) == null) {
-				viewerList = new ArrayList<Viewer>();
-				NTailPlugin.getDefault().error("Corrupted viewerlist; loading default");
+				viewerList = new ArrayList<>();
+				Log.error("Corrupted viewerlist; loading default");
 			}
-			if (debug) NTailPlugin.getDefault().debug("Loaded viewers [size=" + viewerList.size() + "]");
+			Log.debug("Loaded viewers [size=" + viewerList.size() + "]");
 		} else { // initialize the viewer list data structure
-			viewerList = new ArrayList<Viewer>();
-			if (debug) NTailPlugin.getDefault().debug("Loaded default viewerlist");
+			viewerList = new ArrayList<>();
+			Log.debug("Loaded default viewerlist");
 		}
-		if (debug) dumpViewerList();
+		dumpViewerList();
 	}
 
 	public synchronized void orderViewers(ArrayList<Viewer> treeOrderedViewers) {
@@ -202,12 +202,10 @@ public class ViewerSet extends EventManager {
 		try {
 			coder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(vFile)));
 		} catch (FileNotFoundException e) {
-			NTailPlugin.getDefault().error("Failed to create encoder ...", e);
+			Log.error("Failed to create encoder ...", e);
 		}
-		if (debug) {
-			NTailPlugin.getDefault().debug("Saving viewerlist [size=" + viewerList.size() + "]");
-			dumpViewerList();
-		}
+		Log.debug("Saving viewerlist [size=" + viewerList.size() + "]");
+		dumpViewerList();
 		coder.writeObject(viewerList);
 		coder.close();
 	}
@@ -219,14 +217,13 @@ public class ViewerSet extends EventManager {
 			path = path.append(Key.VIEWERS_FILENAME);
 			viewersFile = path.toFile();
 		}
-		if (debug) NTailPlugin.getDefault().debug("Using [file=" + viewersFile + "]");
+		Log.debug("Using [file=" + viewersFile + "]");
 		return viewersFile;
 	}
 
 	private void dumpViewerList() {
-		NTailPlugin.getDefault().debug("Dump ");
 		for (Viewer w : getViewerList()) {
-			NTailPlugin.getDefault().debug("  " + w.toString());
+			Log.debug(w.toString());
 		}
 	}
 
@@ -251,15 +248,17 @@ public class ViewerSet extends EventManager {
 
 				SafeRunnable.run(new SafeRunnable("ViewerSet change error") { //$NON-NLS-1$
 
-						public void run() {
-							listener.propertyChange(pe);
-						}
+					@Override
+					public void run() {
+						listener.propertyChange(pe);
+					}
 
-						public void handleException(Throwable e) {
-							e.printStackTrace();
-							super.handleException(e);
-						}
-					});
+					@Override
+					public void handleException(Throwable e) {
+						e.printStackTrace();
+						super.handleException(e);
+					}
+				});
 			}
 		}
 	}
@@ -287,12 +286,12 @@ public class ViewerSet extends EventManager {
 	// * @param secID the secondary ID associated with the Viewer
 	// */
 	// public synchronized void createSecondaryIdAssociation(String name, String secID) {
-	// NTailPlugin.getDefault().debug("Create association: " + name + "->" + secID);
+	// Log.debug("Create association: " + name + "->" + secID);
 	// viewerMap.put(name, secID);
 	// }
 	//
 	// public synchronized void removeSecondaryIdAssociation(String name, String secID) {
-	// NTailPlugin.getDefault().debug("Remove association: " + name + "->" + secID);
+	// Log.debug("Remove association: " + name + "->" + secID);
 	// viewerMap.remove(name);
 	// }
 	//

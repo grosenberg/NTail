@@ -1,4 +1,4 @@
-package net.certiv.ntail.utils;
+package net.certiv.ntail.util;
 
 import java.util.ArrayList;
 import java.util.Collection;

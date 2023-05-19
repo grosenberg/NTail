@@ -33,22 +33,22 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import net.certiv.ntail.Key;
 import net.certiv.ntail.NTailPlugin;
 import net.certiv.ntail.dialogs.ViewerDialog;
-import net.certiv.ntail.utils.TreeItemTransfer;
+import net.certiv.ntail.util.TreeItemTransfer;
+import net.certiv.ntail.util.log.Log;
 import net.certiv.ntail.viewers.Viewer;
 import net.certiv.ntail.viewers.ViewerSet;
 
 /**
- * This class represents a preference page that is contributed to the Preferences dialog.
- * By subclassing <samp>FieldEditorPreferencePage </samp>, we can use the field support
- * built into JFace that allows us to create a page that is small and knows how to save,
- * restore and apply itself.
+ * This class represents a preference page that is contributed to the Preferences dialog. By
+ * subclassing <samp>FieldEditorPreferencePage </samp>, we can use the field support built into
+ * JFace that allows us to create a page that is small and knows how to save, restore and apply
+ * itself.
  * <p>
- * This page is used to modify preferences only. They are stored in the preference store
- * that belongs to the main plug-in class. That way, preferences can be accessed directly
- * via the preference store.
+ * This page is used to modify preferences only. They are stored in the preference store that
+ * belongs to the main plug-in class. That way, preferences can be accessed directly via the
+ * preference store.
  * </p>
  */
 
@@ -71,10 +71,11 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 	}
 
 	/**
-	 * Creates the field editors. Field editors are abstractions of the common GUI blocks
-	 * needed to manipulate various types of preferences. Each field editor knows how to
-	 * save and restore itself.
+	 * Creates the field editors. Field editors are abstractions of the common GUI blocks needed to
+	 * manipulate various types of preferences. Each field editor knows how to save and restore
+	 * itself.
 	 */
+	@Override
 	protected Control createContents(Composite parent) {
 		contentComposite = new Composite(parent, SWT.NULL);
 
@@ -123,6 +124,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 		newButton.setLayoutData(button1LData);
 		newButton.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent evt) {
 				addViewer(evt);
 			}
@@ -135,6 +137,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 		editButton.setLayoutData(button2LData);
 		editButton.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent evt) {
 				editViewer(evt);
 			}
@@ -147,6 +150,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 		deleteButton.setLayoutData(button3LData);
 		deleteButton.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent evt) {
 				deleteViewer(evt);
 			}
@@ -161,6 +165,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 		importButton.setLayoutData(gridData3);
 		importButton.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent evt) {
 				importViewers(evt);
 			}
@@ -173,6 +178,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 		exportButton.setLayoutData(gridData4);
 		exportButton.addSelectionListener(new SelectionAdapter() {
 
+			@Override
 			public void widgetSelected(SelectionEvent evt) {
 				exportViewers(evt);
 			}
@@ -192,14 +198,13 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 
 	protected void exportViewers(SelectionEvent evt) {
 		FileDialog dialog = new FileDialog(getShell(), SWT.SINGLE | SWT.SAVE);
-		dialog.setFilterExtensions(new String[] {"*.xml"});
+		dialog.setFilterExtensions(new String[] { "*.xml" });
 		dialog.open();
 		if (dialog.getFileName().length() > 0) {
 			String filename = dialog.getFilterPath() + File.separator + dialog.getFileName();
 			File exportFile = new File(filename);
-			if (!exportFile.exists()
-					|| MessageDialog.openQuestion(getShell(), "Export Viewer Definitions",
-						"Export file exists!  Overwrite?")) {
+			if (!exportFile.exists() || MessageDialog.openQuestion(getShell(), "Export Viewer Definitions",
+					"Export file exists!  Overwrite?")) {
 				NTailPlugin.getDefault().getViewerSet().saveViewers(exportFile);
 			}
 		}
@@ -207,7 +212,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 
 	protected void importViewers(SelectionEvent evt) {
 		FileDialog dialog = new FileDialog(getShell(), SWT.SINGLE);
-		dialog.setFilterExtensions(new String[] {"*.xml"});
+		dialog.setFilterExtensions(new String[] { "*.xml" });
 		dialog.open();
 		if (dialog.getFileName().length() > 0) {
 			String filename = dialog.getFilterPath() + File.separator + dialog.getFileName();
@@ -220,6 +225,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 		}
 	}
 
+	@Override
 	protected void performApply() {
 		NTailPlugin.getDefault().getViewerSet().orderViewers(treeOrderedViewers());
 		NTailPlugin.getDefault().getViewerSet().saveViewers();
@@ -230,6 +236,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 	/**
 	 * TODO: check for modifications before reloading
 	 */
+	@Override
 	protected void performDefaults() {
 		NTailPlugin.getDefault().getViewerSet().loadViewers();
 		NTailPlugin.getDefault().getViewerSet().firePropertyChangeEvent();
@@ -237,6 +244,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 		super.performDefaults();
 	}
 
+	@Override
 	public boolean performOk() {
 		NTailPlugin.getDefault().getViewerSet().orderViewers(treeOrderedViewers());
 		NTailPlugin.getDefault().getViewerSet().saveViewers();
@@ -247,6 +255,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 	/**
 	 * TODO: check for modifications before reloading
 	 */
+	@Override
 	public boolean performCancel() {
 		NTailPlugin.getDefault().getViewerSet().loadViewers();
 		return super.performCancel();
@@ -254,9 +263,9 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
+	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(NTailPlugin.getDefault().getPreferenceStore());
 	}
@@ -321,7 +330,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 
 	/**
 	 * Clear and reload all of the tree items from the current store.
-	 * 
+	 *
 	 * @param tree the tree to (re)populate
 	 */
 	@SuppressWarnings("rawtypes")
@@ -355,7 +364,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 	}
 
 	private ArrayList<Viewer> treeOrderedViewers() {
-		ArrayList<Viewer> tv = new ArrayList<Viewer>();
+		ArrayList<Viewer> tv = new ArrayList<>();
 		for (TreeItem treeNode : treePanel.getItems()) {
 			for (TreeItem viewItem : treeNode.getItems()) {
 				tv.add((Viewer) viewItem.getData(Key.TREE_KEY));
@@ -365,7 +374,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 	}
 
 	private void addDnD() {
-		Transfer[] types = new Transfer[] {TreeItemTransfer.getInstance()};
+		Transfer[] types = new Transfer[] { TreeItemTransfer.getInstance() };
 		int operations = DND.DROP_MOVE /* | DND.DROP_COPY | DND.DROP_LINK */;
 
 		final DragSource source = new DragSource(treePanel, operations);
@@ -373,6 +382,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 		final TreeItem[] dragSourceItem = new TreeItem[1];
 		source.addDragListener(new DragSourceListener() {
 
+			@Override
 			public void dragStart(DragSourceEvent event) {
 				TreeItem[] selection = treePanel.getSelection();
 				if (selection.length == 0) {
@@ -381,12 +391,14 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 					event.doit = true;
 					dragSourceItem[0] = selection[0];
 				}
-			};
+			}
 
+			@Override
 			public void dragSetData(DragSourceEvent event) {
 				event.data = dragSourceItem[0];
 			}
 
+			@Override
 			public void dragFinished(DragSourceEvent event) {
 				if (event.doit) {
 					// NTailPlugin.getDefault().debug("Disposing");
@@ -414,6 +426,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 				super.dropAccept(event);
 			}
 
+			@Override
 			public void dragOver(DropTargetEvent event) {
 				event.feedback = DND.FEEDBACK_EXPAND | DND.FEEDBACK_SCROLL;
 				if (event.item != null) {
@@ -432,6 +445,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 				}
 			}
 
+			@Override
 			public void drop(DropTargetEvent event) {
 				if (event.data == null || event.item == null) {
 					event.detail = DND.DROP_NONE;
@@ -492,7 +506,7 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 						}
 					} else {
 						// dropping a view on a viewer; block with #dropAccept()
-						NTailPlugin.getDefault().error("Attempt to drop view on viewer");
+						Log.error("Attempt to drop view on viewer");
 					}
 				}
 			}
@@ -509,9 +523,9 @@ public class PrefsPageViewers extends PreferencePage implements IWorkbenchPrefer
 	}
 
 	/**
-	 * Creates a new node on the given <i>tree</i> and adds a new leaf item for each of
-	 * the leaf items of the given <i>sourceItem</i>.
-	 * 
+	 * Creates a new node on the given <i>tree</i> and adds a new leaf item for each of the leaf
+	 * items of the given <i>sourceItem</i>.
+	 *
 	 * @param tree
 	 * @param sourceItem
 	 * @param index

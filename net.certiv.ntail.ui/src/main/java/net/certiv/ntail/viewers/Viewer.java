@@ -5,12 +5,12 @@ import java.io.Serializable;
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
 
-import net.certiv.ntail.Key;
 import net.certiv.ntail.NTailPlugin;
+import net.certiv.ntail.preferences.Key;
 
 /**
- * Defines an essentially naked data structure that represents a single Viewer instance. This class
- * is serialized to persist a Viewer definition.
+ * Defines an essentially naked data structure that represents a single NTail view instance. This
+ * class is serialized to persist a Viewer definition.
  */
 public class Viewer implements Serializable {
 
@@ -295,7 +295,7 @@ public class Viewer implements Serializable {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder("Dump:\n");
 		sb.append("  [view=" + getViewName() + "]\n");
 		sb.append("  [logfile=" + getFileName() + "]\n");
 		sb.append("  [interval=" + getInterval() + "]\n");

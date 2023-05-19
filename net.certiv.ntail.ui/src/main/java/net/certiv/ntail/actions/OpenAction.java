@@ -2,10 +2,10 @@ package net.certiv.ntail.actions;
 
 import java.util.ArrayList;
 
-import net.certiv.ntail.Key;
 import net.certiv.ntail.NTailPlugin;
 import net.certiv.ntail.NTailView;
-import net.certiv.ntail.utils.ImageUtils;
+import net.certiv.ntail.preferences.Key;
+import net.certiv.ntail.util.ImageUtils;
 import net.certiv.ntail.viewers.ViewerSet;
 
 import org.eclipse.jface.action.Action;

@@ -1,7 +1,7 @@
-package net.certiv.ntail.utils;
+package net.certiv.ntail.util;
 
 import java.util.ArrayList;
-import net.certiv.ntail.NTailPlugin;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -21,6 +21,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
+
+import net.certiv.ntail.util.log.Log;
 
 public class DocUtils {
 
@@ -47,7 +49,7 @@ public class DocUtils {
 				if (sourceFolders.size() == 0) continue;
 
 				// build ordered list of source folder relative paths
-				ArrayList<String> paths = new ArrayList<String>();
+				ArrayList<String> paths = new ArrayList<>();
 				paths.add(relName);
 				for (IResource folder : sourceFolders) {
 					String pathPart = folder.getFullPath().removeFirstSegments(1).toPortableString();
@@ -57,7 +59,7 @@ public class DocUtils {
 				for (String path : paths) {
 					if (debug) {
 						String projPath = proj.getProject().getLocationURI().toString();
-						NTailPlugin.getDefault().debug("Examine [path=" + projPath + "/" + path + "]");
+						Log.debug("Examine [path=" + projPath + "/" + path + "]");
 					}
 					IResource member = proj.getProject().findMember(path);
 					if (member != null && member instanceof IFile) {
@@ -65,7 +67,7 @@ public class DocUtils {
 						if (file.exists()) {
 							if (debug) {
 								String filePath = file.getLocationURI().toString();
-								NTailPlugin.getDefault().debug("Found [path=" + filePath + "]");
+								Log.debug("Found [path=" + filePath + "]");
 							}
 							openFile(file, lineNumber);
 							return;
@@ -73,16 +75,16 @@ public class DocUtils {
 					}
 				}
 			}
-			NTailPlugin.getDefault().debug("File not found [file=" + relName + "]");
+			Log.debug("File not found [file=" + relName + "]");
 		} catch (Exception e) {
-			NTailPlugin.getDefault().error("General exception", e);
+			Log.error("General exception", e);
 		}
 	}
 
 	private ArrayList<IProject> getOpenProjects() {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IProject[] projs = root.getProjects();
-		ArrayList<IProject> res = new ArrayList<IProject>();
+		ArrayList<IProject> res = new ArrayList<>();
 		for (IProject proj : projs) { // skip closed and non-java projects
 			if (!proj.isAccessible()) continue;
 			res.add(proj);
@@ -92,12 +94,12 @@ public class DocUtils {
 
 	private ArrayList<IResource> getSourceFolders(IJavaProject javaProject) {
 		IClasspathEntry[] entries = null;
-		ArrayList<IResource> sourceFolders = new ArrayList<IResource>();
+		ArrayList<IResource> sourceFolders = new ArrayList<>();
 		try {
 			entries = javaProject.getRawClasspath();
 		} catch (JavaModelException e) {
 			String name = javaProject.getProject().getName();
-			NTailPlugin.getDefault().error("Project classpath read failed [proj=" + name + "]");
+			Log.error("Project classpath read failed [proj=" + name + "]");
 			return sourceFolders;
 		}
 
@@ -114,6 +116,7 @@ public class DocUtils {
 
 	public void openFile(final IFile file, final int lineNumber) {
 		Display.getDefault().asyncExec(new Runnable() {
+			@Override
 			public void run() {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				try {
@@ -122,9 +125,9 @@ public class DocUtils {
 						revealLine((ITextEditor) part, lineNumber);
 					}
 				} catch (PartInitException e) {
-					NTailPlugin.getDefault().error("Failed to open editor [msg=" + e.getMessage() + "]");
+					Log.error("Failed to open editor [msg=" + e.getMessage() + "]");
 				} catch (BadLocationException e) {
-					NTailPlugin.getDefault().error("Failed to reveal line [msg=" + e.getMessage() + "]");
+					Log.error("Failed to reveal line [msg=" + e.getMessage() + "]");
 				}
 			}
 		});
@@ -147,7 +150,8 @@ public class DocUtils {
 
 		for (int i = 0, maxi = entries.length; i < maxi; i++) {
 			if ((entries[i].getEntryKind() == IClasspathEntry.CPE_SOURCE)
-					&& (!javaProject.getPath().equals(entries[i].getPath()))) return true;
+					&& (!javaProject.getPath().equals(entries[i].getPath())))
+				return true;
 		}
 		return false;
 	}

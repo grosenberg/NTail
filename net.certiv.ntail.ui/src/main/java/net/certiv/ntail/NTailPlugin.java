@@ -3,14 +3,14 @@ package net.certiv.ntail;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import net.certiv.ntail.dialogs.FindDialog.FindState;
-import net.certiv.ntail.utils.DocUtils;
+import net.certiv.ntail.util.DocUtils;
+import net.certiv.ntail.util.log.Level;
+import net.certiv.ntail.util.log.Log;
 import net.certiv.ntail.viewers.ViewerSet;
 
 /**
@@ -19,7 +19,7 @@ import net.certiv.ntail.viewers.ViewerSet;
 public class NTailPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = Key.NAME;
+	public static final String PLUGIN_ID = NTailPlugin.class.getName();
 
 	/** The shared instance of the plugin */
 	private static NTailPlugin plugin;
@@ -49,6 +49,9 @@ public class NTailPlugin extends AbstractUIPlugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+
+		Log.init(plugin, Level.DEBUG);
+
 		try {
 			resourceBundle = ResourceBundle.getBundle("net.certiv.ntail.NTailPluginResources");
 		} catch (MissingResourceException e) {
@@ -59,7 +62,7 @@ public class NTailPlugin extends AbstractUIPlugin {
 		try {
 			docUtils = new DocUtils();
 		} catch (NoClassDefFoundError e) {
-			debug("JDT not found.");
+			Log.debug("JDT not found.");
 		}
 	}
 
@@ -136,22 +139,22 @@ public class NTailPlugin extends AbstractUIPlugin {
 		this.findState = state;
 	}
 
-	// ////////////// Debug routines //////////////////////////
-	public void error(String msg) {
-		error(msg, null);
-	}
-
-	public void error(String msg, Exception e) {
-		Status s = new Status(IStatus.ERROR, PLUGIN_ID, 1, msg, e);
-		getDefault().getLog().log(s);
-	}
-
-	public void debug(String msg) {
-		debug(msg, null);
-	}
-
-	public void debug(String msg, Exception e) {
-		Status s = new Status(IStatus.WARNING, PLUGIN_ID, 2, msg, e);
-		getDefault().getLog().log(s);
-	}
+	// // ////////////// Debug routines //////////////////////////
+	// public void error(String msg) {
+	// error(msg, null);
+	// }
+	//
+	// public void error(String msg, Exception e) {
+	// Status s = new Status(IStatus.ERROR, PLUGIN_ID, 1, msg, e);
+	// getDefault().getLog().log(s);
+	// }
+	//
+	// public void debug(String msg) {
+	// debug(msg, null);
+	// }
+	//
+	// public void debug(String msg, Exception e) {
+	// Status s = new Status(IStatus.WARNING, PLUGIN_ID, 2, msg, e);
+	// getDefault().getLog().log(s);
+	// }
 }

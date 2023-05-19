@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.certiv.ntail.utils;
+package net.certiv.ntail.util;
 
 import net.certiv.ntail.NTailPlugin;
 

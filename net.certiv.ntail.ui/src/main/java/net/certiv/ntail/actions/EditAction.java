@@ -6,7 +6,7 @@ import org.eclipse.jface.window.Window;
 
 import net.certiv.ntail.NTailView;
 import net.certiv.ntail.dialogs.ViewerDialog;
-import net.certiv.ntail.utils.ImageUtils;
+import net.certiv.ntail.util.ImageUtils;
 import net.certiv.ntail.viewers.ViewerSetEntry;
 
 /**

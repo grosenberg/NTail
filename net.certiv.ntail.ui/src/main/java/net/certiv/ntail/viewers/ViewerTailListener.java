@@ -1,6 +1,6 @@
 package net.certiv.ntail.viewers;
 
-import net.certiv.ntail.utils.BufferList;
+import net.certiv.ntail.util.BufferList;
 
 /**
  * Listens to a ViewerTail for an update to the file being watched.

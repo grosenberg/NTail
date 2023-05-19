@@ -10,16 +10,16 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-import net.certiv.ntail.Key;
-import net.certiv.ntail.NTailPlugin;
+
 import net.certiv.ntail.NTailView;
-import net.certiv.ntail.utils.BufferList;
-import net.certiv.ntail.utils.NioFileLock;
+import net.certiv.ntail.preferences.Key;
+import net.certiv.ntail.util.BufferList;
+import net.certiv.ntail.util.NioFileLock;
+import net.certiv.ntail.util.log.Log;
 
 /**
- * Watches a text file for any changes, and keeps a list of the most recent lines to have
- * been added to the file. Notifies ViewerListeners when a change to the file being tailed
- * is detected.
+ * Watches a text file for any changes, and keeps a list of the most recent lines to have been added
+ * to the file. Notifies ViewerListeners when a change to the file being tailed is detected.
  */
 public class ViewerTail extends Thread {
 
@@ -58,6 +58,7 @@ public class ViewerTail extends Thread {
 	/**
 	 * Runs the thread that watches for changes to the file.
 	 */
+	@Override
 	public void run() {
 		boolean updated = false;
 		long lastSize = 0;
@@ -122,11 +123,11 @@ public class ViewerTail extends Thread {
 				lineList.clear();
 			}
 		} catch (InterruptedException e) {
-			// NTailPlugin.getDefault().error("Main loop interrupted", e);
+			// Log.error("Main loop interrupted", e);
 		} catch (FileNotFoundException e) {
-			NTailPlugin.getDefault().error("Log file went missing in main loop", e);
+			Log.error("Log file went missing in main loop", e);
 		} catch (IOException e) {
-			NTailPlugin.getDefault().error("Read error in main loop", e);
+			Log.error("Read error in main loop", e);
 		}
 		closeLogBuffer();
 	}
@@ -156,13 +157,13 @@ public class ViewerTail extends Thread {
 			if (lineList.size() > 0 && viewer.isFilters() && viewer.isReplace()) {
 				// modify using the replace regex
 				for (int idx = 0; idx < lineList.size(); idx++) {
-					String repline = replacePattern.matcher((String) lineList.get(idx)).replaceAll(
-						viewer.getRepWithText());
+					String repline = replacePattern.matcher((String) lineList.get(idx))
+							.replaceAll(viewer.getRepWithText());
 					lineList.set(idx, repline);
 				}
 			}
 		} catch (IOException e) {
-			NTailPlugin.getDefault().error("Error reading from log file", e);
+			Log.error("Error reading from log file", e);
 		}
 	}
 
@@ -170,15 +171,15 @@ public class ViewerTail extends Thread {
 		if (lineBuffer == null) {
 			try {
 				if (viewer.getEncoding() != null) {
-					lineBuffer = new BufferedReader(new InputStreamReader(
-							new FileInputStream(viewer.getFileName()), encValidate(viewer.getEncoding())));
+					lineBuffer = new BufferedReader(new InputStreamReader(new FileInputStream(viewer.getFileName()),
+							encValidate(viewer.getEncoding())));
 				} else {
 					lineBuffer = new BufferedReader(new FileReader(viewer.getFile()));
 				}
 			} catch (FileNotFoundException e) {
-				NTailPlugin.getDefault().error("Error opening log file reader", e);
+				Log.error("Error opening log file reader", e);
 			} catch (UnsupportedEncodingException e) {
-				NTailPlugin.getDefault().error("Error unknown log file encoding preference", e);
+				Log.error("Error unknown log file encoding preference", e);
 			}
 		}
 	}
@@ -188,7 +189,7 @@ public class ViewerTail extends Thread {
 			String s = Key.ENCODING_NAME[idx];
 			if (s.equals(encoding)) return Key.ENCODING_VALUE[idx];
 		}
-		NTailPlugin.getDefault().error("Unmatched log file encoding preference");
+		Log.error("Unmatched log file encoding preference");
 		return "CP1252";
 	}
 
@@ -197,7 +198,7 @@ public class ViewerTail extends Thread {
 			try {
 				lineBuffer.close();
 			} catch (IOException e) {
-				NTailPlugin.getDefault().error("Error closing log file reader", e);
+				Log.error("Error closing log file reader", e);
 			}
 		}
 		lineBuffer = null;
@@ -214,7 +215,7 @@ public class ViewerTail extends Thread {
 			try {
 				locked = locker.lock();
 			} catch (IOException e) {
-				NTailPlugin.getDefault().error("Error locking log file for truncation", e);
+				Log.error("Error locking log file for truncation", e);
 			}
 			if (locked) {
 				locker.truncate();
@@ -245,7 +246,7 @@ public class ViewerTail extends Thread {
 	}
 
 	// //// Event Controls /////////////////////////////
-	private ArrayList<ViewerTailListener> listeners = new ArrayList<ViewerTailListener>();
+	private ArrayList<ViewerTailListener> listeners = new ArrayList<>();
 
 	public void addListener(ViewerTailListener listener) {
 		listeners.add(listener);

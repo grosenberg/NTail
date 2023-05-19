@@ -2,9 +2,7 @@ package net.certiv.ntail.viewers;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.certiv.ntail.Key;
-import net.certiv.ntail.NTailPlugin;
-import net.certiv.ntail.preferences.Prefs;
+
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.ExtendedModifyEvent;
@@ -12,10 +10,13 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 
+import net.certiv.ntail.preferences.Key;
+import net.certiv.ntail.preferences.Prefs;
+import net.certiv.ntail.util.log.Log;
+
 /**
- * Management object used to hold a view configured Viewer object for the view instance.
- * Also, provides utility services to deconstruct the Viewer object from the view
- * instance.
+ * Management object used to hold a view configured Viewer object for the view instance. Also,
+ * provides utility services to deconstruct the Viewer object from the view instance.
  */
 public class ViewerSetEntry {
 
@@ -56,7 +57,7 @@ public class ViewerSetEntry {
 			initViewerSetEntry();
 			getViewerTail().reload();
 		} catch (Throwable t) {
-			NTailPlugin.getDefault().error("Error restarting the entry");
+			Log.error("Error restarting the entry");
 		}
 	}
 
@@ -65,7 +66,7 @@ public class ViewerSetEntry {
 			getViewerTail().halt();
 			getTab().dispose();
 		} catch (Throwable t) {
-			NTailPlugin.getDefault().error("Error disposing of the entry");
+			Log.error("Error disposing of the entry");
 		}
 	}
 
@@ -134,9 +135,8 @@ public class ViewerSetEntry {
 						st.setStyleRange(style);
 					}
 				} catch (IllegalArgumentException ex) {
-					NTailPlugin.getDefault().error(
-						"Line match failed [line=" + idx + ":" + (endLineIdx - begLineIdx) + ", beg="
-								+ begLineOffset + ", end=" + endLineOffset + "]", ex);
+					Log.error("Line match failed [line=" + idx + ":" + (endLineIdx - begLineIdx) + ", beg="
+							+ begLineOffset + ", end=" + endLineOffset + "]", ex);
 				}
 			}
 		}
@@ -171,9 +171,8 @@ public class ViewerSetEntry {
 						}
 					}
 				} catch (IllegalArgumentException ex) {
-					NTailPlugin.getDefault().error(
-						"Line match failed [line=" + idx + ":" + (endLineIdx - begLineIdx) + ", beg="
-								+ begLineOffset + ", end=" + endLineOffset + "]", ex);
+					Log.error("Line match failed [line=" + idx + ":" + (endLineIdx - begLineIdx) + ", beg="
+							+ begLineOffset + ", end=" + endLineOffset + "]", ex);
 				}
 			}
 		}
